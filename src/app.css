@@ -1,0 +1,13 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';
+
+@layer base {
+    dialog::backdrop {
+        @apply bg-black/50;
+    }
+    body {
+        @apply bg-green-800 text-white;
+        min-height: 100vh;
+    }
+}
