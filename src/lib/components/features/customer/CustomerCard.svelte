@@ -54,32 +54,6 @@
             <!-- @TODO boutton voir les contacts -->
         </div>
 
-        {#if customerData.containerType}
-            <div class="flex flex-col">
-                <span class="text-green-800 font-bold text-xl">Contenant:</span>
-                <span class="text-black text-lg">{customerData.containerType}</span>
-            </div>
-        {/if}
-
-        {#if customerData.status}
-            <div class="flex flex-col">
-                <span class="text-green-800 font-bold text-xl">Status:</span>
-                <span class="text-black text-lg">{customerData.status ?? '?'}</span>
-            </div>
-        {/if}
-
-        {#if customerData.lastCommunication}
-            <div class="flex flex-col">
-                <span class="text-green-800 font-bold text-xl">Dernière communication:</span>
-                <span class="text-black text-lg">{customerData.lastCommunication ?? '?'}</span>
-            </div>
-        {/if}
-
-        <div class="flex flex-col">
-            <span class="text-green-800 font-bold text-xl">Priorité:</span>
-            <span class="text-black text-lg">{customerData.priority}</span>
-        </div>
-
         <div class="flex flex-col">
             <span class="text-green-800 font-bold text-xl">Commentaires:</span>
             <span class="text-black text-lg">{customerData.comments.length}</span>

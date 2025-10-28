@@ -5,12 +5,13 @@ export type Customer = {
     name: string,
     addresses: Array<string>,
     type: string,
-    contacts: Array<Contact>, // @TODO
+    //TODO: refaire les contacts
+    contacts: Array<string>, //Array<Contact>,
     containerType: string,
     status: string,
     lastCommunication: string | null,
     priority: string,
-    comments: Array<Comment>, // @TODO
+    comments: Array<string>,
     otherData: Row,
 };
 
@@ -41,7 +42,7 @@ export const typeColorOptions = {
     restaurant: null,
     cave: null,
     festival: null,
-    inonnu: '--color-gray-500',
+    inconnu: '--color-gray-500',
 };
 
 export const containerTypeColorOptions = {
@@ -57,7 +58,3 @@ export const statusColorOptions = {
     mort: '--color-red-500',
     aucun: '--color-gray-500',
 };
-
-export type Comment = {
-    text: string,
-}

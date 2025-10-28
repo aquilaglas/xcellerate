@@ -27,7 +27,7 @@
 />
 
 <div class="h-full w-full flex items-center justify-center">
-    <button type="button" class="bg-black hover:bg-gray-700 items-center rounded-lg p-4 w-100 m-4" onclick={() => {
+    <button type="button" class="bg-black hover:bg-gray-700 active:bg-gray-700 items-center rounded-lg p-4 w-100 m-4" onclick={() => {
         document.getElementById('fileInput')?.click();
     }}>
         <span class="text-white font-bold">Importer un Excel</span>
@@ -43,7 +43,7 @@
         {:else if status === 'success'}
             <span>Importation Réussie !</span>
             <button type="button"
-                    class="uppercase bg-black hover:bg-gray-700 items-center rounded-lg p-4"
+                    class="uppercase bg-black hover:bg-gray-700 active:bg-gray-700 items-center rounded-lg p-4"
                     onclick={() => {showModal = false; goto('/customers');}}>
                 <span class="text-white font-bold">Continuer</span>
             </button>

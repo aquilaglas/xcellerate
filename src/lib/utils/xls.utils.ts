@@ -32,6 +32,9 @@ export const exportXlsData = (customers: Customer[]) => {
         'Statut': customer.status || '',
         'Adresses': customer.addresses?.join('\n') || '',
         'Dernière communication': customer.lastCommunication || '',
+        'Commentaires': customer.comments?.join('\n') || '',
+            //TODO: refaire les contacts
+        'Contacts': customer.contacts?.join('\n') || '',
         ...customer.otherData
     }));
 

@@ -1,4 +1,11 @@
-import {priorityOrder, type SortDirection, type SortField, statusOrder} from "$lib/types/sort.types.js";
+import {
+    containerTypeOrder,
+    priorityOrder,
+    type SortDirection,
+    type SortField,
+    statusOrder,
+    typeOrder
+} from "$lib/types/sort.types.js";
 import type {Customer} from "$lib/types/customer.types.js";
 
 export function toggleSort(field: SortField, sortField: SortField, sortDirection: SortDirection) {
@@ -37,12 +44,12 @@ export const sortCustomers = (customers: Customer[], sortField: SortField, sortD
                 bValue = b.name?.toLowerCase() || '';
                 break;
             case 'type':
-                aValue = a.type?.toLowerCase() || '';
-                bValue = b.type?.toLowerCase() || '';
+                aValue = typeOrder[a.priority?.toLowerCase() || ''] || 999;
+                bValue = typeOrder[b.priority?.toLowerCase() || ''] || 999;
                 break;
             case 'containerType':
-                aValue = a.containerType?.toLowerCase() || '';
-                bValue = b.containerType?.toLowerCase() || '';
+                aValue = containerTypeOrder[a.priority?.toLowerCase() || ''] || 999;
+                bValue = containerTypeOrder[b.priority?.toLowerCase() || ''] || 999;
                 break;
             case 'priority':
                 aValue = priorityOrder[a.priority?.toLowerCase() || ''] || 999;

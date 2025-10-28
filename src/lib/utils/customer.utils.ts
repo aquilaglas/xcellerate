@@ -93,6 +93,15 @@ const getFormattedKeyAndValue = (key: string, value: any): {formattedKey: keyof 
             formattedKey = 'priority';
             formattedValue = value ? priorityMap[value] || 'aucune'  : 'aucune';
             break;
+        case 'commentaires':
+            formattedKey = 'comments';
+            formattedValue = value ? value.split('\n') : [];
+            break;
+        //TODO: refaire les contacts
+        case 'contacts':
+            formattedKey = 'contacts';
+            formattedValue = value ? value.split('\n') : [];
+            break;
         default:
             formattedKey = 'otherData';
             formattedValue = { key, value };

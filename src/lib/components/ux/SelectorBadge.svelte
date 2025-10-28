@@ -58,7 +58,7 @@
             {#each Object.keys(options) as option}
                 {#if option !== value}
                     <button type="button" onclick={() => selectOption(option)}
-                            class="w-full text-left px-4 py-2 hover:bg-gray-100 text-black transition-colors">
+                            class="w-full text-left px-4 py-2 hover:bg-gray-100 active:bg-gray-100 text-black transition-colors">
                         {option}
                     </button>
                 {/if}
