@@ -26,7 +26,7 @@
         onchange={handleImport}
 />
 
-<div class="h-full w-full flex items-center justify-evenly overflow-hidden">
+<div class="h-full w-full flex items-center justify-center">
     <button type="button" class="bg-black hover:bg-gray-700 items-center rounded-lg p-4 w-100 m-4" onclick={() => {
         document.getElementById('fileInput')?.click();
     }}>
