@@ -29,6 +29,7 @@
                 <ButtonSort sortField={data.sortField} sortDirection={data.sortDirection} field={key} title={value}/>
             {/each}
         </div>
+        <h2 class="text-2xl font-bold text-green-700">{data.sortedCustomers.length} clients</h2>
     </div>
     {#if !data.sortedCustomers || data.sortedCustomers.length === 0}
         <Modal showModal={true} title="Importation Excel">
