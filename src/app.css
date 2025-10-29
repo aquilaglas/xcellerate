@@ -7,7 +7,52 @@
         @apply bg-black/50;
     }
     body {
-        @apply bg-green-800 text-white;
-        min-height: 100vh;
+        @apply text-gray-900 bg-green-700 dark:text-green-50;
+    }
+    header {
+        @apply text-gray-900 bg-green-700 dark:text-green-50;
+    }
+    main {
+        @apply text-gray-900 bg-gray-100 dark:text-green-50 dark:bg-gray-900 h-fit w-full;
+    }
+}
+
+@layer components {
+    .btn-primary {
+        @apply text-green-50 bg-green-700 hover:bg-green-600 active:bg-green-600
+        transition-colors duration-300 ease-in-out font-bold uppercase flex gap-2 items-center justify-center rounded-lg p-4;
+    }
+    .btn-secondary {
+        @apply text-gray-900 bg-gray-300 hover:bg-gray-200 active:bg-gray-200
+        dark:text-green-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:active:bg-gray-700
+        transition-colors duration-300 ease-in-out font-bold uppercase flex gap-2 items-center justify-center rounded-lg p-4;
+    }
+    .btn-danger {
+        @apply flex items-center p-2 rounded-md bg-red-500 hover:bg-red-700 active:bg-red-700
+        transition-colors duration-300 ease-in-out;
+    }
+    .btn-link {
+        @apply text-gray-900 hover:text-gray-700 active:text-gray-700
+        dark:text-green-50 dark:hover:text-gray-400 dark:active:text-gray-400;
+    }
+    .clickable-card {
+        @apply text-gray-900 bg-white hover:bg-gray-200 active:bg-gray-200
+        dark:text-green-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:active:bg-gray-700
+        transition-colors duration-300 ease-in-out shadow-lg rounded-lg p-4;
+    }
+    .card {
+        @apply text-gray-900 bg-white
+        dark:text-green-50 dark:bg-gray-800
+        flex flex-col text-left font-medium shadow-lg rounded-lg p-4;
+    }
+    .input {
+        @apply border-1 text-gray-700 bg-white border-gray-300
+        dark:text-green-50 dark:bg-gray-700 dark:border-gray-500
+        p-2 rounded-md focus:ring-0 focus:outline-none font-light shadow-md
+    }
+    .modal {
+        @apply text-gray-900 bg-gray-100
+        dark:text-green-50 dark:bg-gray-900
+        top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 overflow-auto items-center align-middle rounded-2xl w-fit h-fit shadow-lg p-4;
     }
 }

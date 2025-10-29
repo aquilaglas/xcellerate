@@ -19,11 +19,11 @@
 
 
 <a href="/customers/{customerData.id}"
-   class="bg-white hover:bg-gray-300 text-left h-full w-full p-4 rounded-2xl flex flex-col">
-    <span class="text-black font-bold text-4xl mb-4">{customerData.name && customerData.name !== '' ? customerData.name : '?'}</span>
+   class="clickable-card">
+    <span class="text-4xl mb-4">{customerData.name && customerData.name !== '' ? customerData.name : '?'}</span>
 
     <div class="mb-2">
-        <span class="text-gray-500 text-lg">{customerData.lastCommunication ?? '?'}</span>
+        <span class="text-gray-500 dark:text-gray-300 text-lg">{customerData.lastCommunication ?? '?'}</span>
         <div class="flex flex-wrap gap-2">
             <SelectorBadge options={typeColorOptions} bind:value={customerData.type} title="Type" disabled={true}/>
             <SelectorBadge options={containerTypeColorOptions} bind:value={customerData.containerType}
@@ -35,29 +35,44 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-2 md:grid-cols-1 gap-x-4">
-        {#if customerData.addresses.length > 0}
-            <div class="flex flex-col">
-                <span class="text-green-800 font-bold text-xl">Adresses:</span>
-                <div class="text-black text-lg truncate">
-                    {#each customerData.addresses as address, index}
-                        {@const isLast = index === customerData.addresses.length - 1}
-                        <span>{address}{isLast ? '' : ', '}</span>
-                    {/each}
-                </div>
-            </div>
-        {/if}
-
-        <div class="flex flex-col">
-            <span class="text-green-800 font-bold text-xl">Contacts:</span>
-            <span class="text-black text-lg">{customerData.contacts.length}</span>
-            <!-- @TODO boutton voir les contacts -->
+    <div class="flex flex-col border-b border-b-gray-900 dark:border-b-gray-300 py-1">
+        <div class="flex flex-wrap gap-2 gap-y-0">
+            <span class="text-green-700 font-bold text-xl">Adresses:</span>
+            <span class="text-lg truncate">{customerData.addresses.length}</span>
         </div>
+        <div class="text-lg truncate">
+            {#each customerData.addresses as address, index}
+                {@const isLast = index === customerData.addresses.length - 1}
+                <span>{address}{isLast ? '' : ', '}</span>
+            {/each}
+        </div>
+    </div>
 
-        <div class="flex flex-col">
-            <span class="text-green-800 font-bold text-xl">Commentaires:</span>
-            <span class="text-black text-lg">{customerData.comments.length}</span>
-            <!-- @TODO boutton voir les commentaires -->
+    <!-- @TODO boutton voir les contacts -->
+    <div class="flex flex-col border-b border-b-gray-900 dark:border-b-gray-300 py-1">
+        <div class="flex flex-wrap gap-2 gap-y-0">
+            <span class="text-green-700 font-bold text-xl">Contacts:</span>
+            <span class="text-lg truncate">{customerData.contacts.length}</span>
+        </div>
+        <div class="text-lg truncate">
+            {#each customerData.contacts as address, index}
+                {@const isLast = index === customerData.contacts.length - 1}
+                <span>{address}{isLast ? '' : ', '}</span>
+            {/each}
+        </div>
+    </div>
+
+    <!-- @TODO boutton voir les commentaires -->
+    <div class="flex flex-col pt-1">
+        <div class="flex flex-wrap gap-2 gap-y-0">
+            <span class="text-green-700 font-bold text-xl">Commentaires:</span>
+            <span class="text-lg truncate">{customerData.comments.length}</span>
+        </div>
+        <div class="text-lg truncate">
+            {#each customerData.comments as address, index}
+                {@const isLast = index === customerData.comments.length - 1}
+                <span>{address}{isLast ? '' : ', '}</span>
+            {/each}
         </div>
     </div>
 </a>

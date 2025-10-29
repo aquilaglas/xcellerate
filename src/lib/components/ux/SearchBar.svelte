@@ -1,14 +1,21 @@
-<script>
+<script lang="ts">
     import {Search} from "lucide-svelte";
+
+    type Props = {
+        search?: string;
+        searchField: string;
+    }
+
+    const {search, searchField}: Props = $props();
 </script>
 
 <form>
-	<div class="group sm:w-full bg-black hover:bg-gray-700 active:bg-gray-700 rounded-4xl border border-gray-500 sm:px-4 flex gap-2">
-		<input class="hidden sm:block w-full text-white placeholder:text-white bg-black group-hover:bg-gray-700 group-active:bg-gray-700 border-none focus:outline-none focus:ring-0" type="search" id="search-bar-input"
-					 placeholder="Rechercher" />
+	<div class="btn-secondary gap-0 font-light p-0 group hover:bg-gray-300 dark:hover:bg-gray-800">
+	    <input class="w-full input border-2 shadow-none" type="search" id="search-bar-input"
+					 placeholder="Rechercher un client par {searchField}" />
 		<button type="submit">
-			<Search
-				class="text-white bg-black group-hover:bg-gray-700 group-active:bg-gray-700 m-2" />
+			<Search class="text-gray-900 dark:text-green-50 bg-gray-300 dark:bg-gray-800
+			transition-colors duration-300 ease-in-out m-2" />
 		</button>
 	</div>
 </form>

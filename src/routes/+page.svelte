@@ -2,6 +2,7 @@
     import {importXlsData} from "$lib/utils/xls.utils.js";
     import Modal from "$lib/components/ui/Modal.svelte";
     import {goto} from "$app/navigation";
+    import Header from "$lib/components/ui/Header.svelte";
 
     let status: "success" | "failed" | "loading" = $state("loading");
 
@@ -25,14 +26,15 @@
         class="hidden"
         onchange={handleImport}
 />
-
-<div class="h-full w-full flex items-center justify-center">
-    <button type="button" class="bg-black hover:bg-gray-700 active:bg-gray-700 items-center rounded-lg p-4 w-100 m-4" onclick={() => {
+<Header>
+    <div class="w-full flex justify-center bg-green-700 pt-[40%]">
+        <button type="button" class="clickable-card font-bold" onclick={() => {
         document.getElementById('fileInput')?.click();
     }}>
-        <span class="text-white font-bold">Importer un Excel</span>
-    </button>
-</div>
+            <span>Importer un Excel</span>
+        </button>
+    </div>
+</Header>
 
 <Modal bind:showModal title="Importation Excel">
     <div class="flex flex-col gap-4 p-4">
@@ -43,9 +45,9 @@
         {:else if status === 'success'}
             <span>Importation Réussie !</span>
             <button type="button"
-                    class="uppercase bg-black hover:bg-gray-700 active:bg-gray-700 items-center rounded-lg p-4"
+                    class="btn-primary"
                     onclick={() => {showModal = false; goto('/customers');}}>
-                <span class="text-white font-bold">Continuer</span>
+                <span>Continuer</span>
             </button>
         {/if}
     </div>
