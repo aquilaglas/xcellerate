@@ -28,7 +28,9 @@
     onMount(() => {
         formData = {
             ...customer,
-            addresses: [...customer.addresses]
+            addresses: [...customer.addresses],
+            contacts: [...customer.contacts],
+            comments: [...customer.comments],
         };
         isInitialized = true;
     });

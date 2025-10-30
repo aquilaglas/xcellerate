@@ -23,8 +23,17 @@ export const PATCH: RequestHandler = async ({ request, locals, params }) => {
 
     const updates: Customer = await request.json();
 
+    const addresses = updates.addresses.filter(value => value !== '');
+    const contacts = updates.contacts.filter(value => value !== '');
+    const comments = updates.comments.filter(value => value !== '');
+
     locals.customers.splice(index, 1);
-    locals.customers.push({ ...updates, addresses: [...updates.addresses] });
+    locals.customers.push({
+        ...updates,
+        addresses: [...addresses],
+        contacts: [...contacts],
+        comments: [...comments]
+    });
 
     return new Response(JSON.stringify(updates), { status: 200 });
 };

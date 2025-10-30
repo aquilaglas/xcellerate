@@ -18,7 +18,12 @@ export const POST: RequestHandler = async ({request, locals}) => {
     }
 
     const beforeLength = locals.customers.length;
-    const afterLength = locals.customers.push({ ...customer, addresses: [...customer.addresses] });
+    const afterLength = locals.customers.push({
+        ...customer,
+        addresses: [...customer.addresses],
+        contacts: [...customer.contacts],
+        comments: [...customer.comments]
+    });
 
     if (afterLength !== beforeLength + 1) {
         return new Response(JSON.stringify({ error: 'Push failed' }), {status: 500});

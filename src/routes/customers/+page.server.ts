@@ -1,5 +1,5 @@
 import type {SortDirection, SortField} from "$lib/types/sort.types.js";
-import {sortCustomers} from "$lib/utils/sort.utils.js";
+import {filterCustomers, sortCustomers} from "$lib/utils/sort.utils.js";
 
 export const load = async ({ url, fetch }) => {
     const res = await fetch('/api/customers');
@@ -7,8 +7,10 @@ export const load = async ({ url, fetch }) => {
 
     const sortField = url.searchParams.get('sortField') as SortField ?? 'name';
     const sortDirection = url.searchParams.get('sortDirection') as SortDirection ?? 'asc';
+    const search = url.searchParams.get('search') as string ?? '';
 
-    const sortedCustomers = sortCustomers(customers, sortField, sortDirection);
+    const filteredCustomers = filterCustomers(customers, sortField, search);
+    const sortedCustomers = sortCustomers(filteredCustomers, sortField, sortDirection);
 
-    return { sortedCustomers, sortField, sortDirection };
+    return { sortedCustomers, sortField, sortDirection, search };
 };

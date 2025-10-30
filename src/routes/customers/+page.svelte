@@ -23,7 +23,8 @@
 
 <Header withButtons={true}>
     <div class="flex flex-col gap-4 p-4">
-        <SearchBar searchField={filterData[data.sortField]}/>
+        <SearchBar searchField={data.sortField} search={data.search} title={filterData[data.sortField]}
+                   fallbackUrl="/customers?sortField={data.sortField}&sortDirection={data.sortDirection}" />
         <div class="flex flex-wrap gap-2">
             {#each Object.entries(filterData) as [key, value]}
                 <ButtonSort sortField={data.sortField} sortDirection={data.sortDirection} field={key} title={value}/>

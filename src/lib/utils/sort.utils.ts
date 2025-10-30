@@ -81,3 +81,9 @@ export const sortCustomers = (customers: Customer[], sortField: SortField, sortD
 
     return customers;
 };
+
+export const filterCustomers = (customers: Customer[], sortField: SortField, search: string) => {
+    if (search === '') return customers;
+
+    return customers.filter(customer => customer[sortField]?.toLowerCase().includes(search.toLowerCase()));
+}
