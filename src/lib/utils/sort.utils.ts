@@ -8,7 +8,7 @@ import {
 } from "$lib/types/sort.types.js";
 import type {Customer} from "$lib/types/customer.types.js";
 
-export function toggleSort(field: SortField, sortField: SortField, sortDirection: SortDirection) {
+export function toggleSort(field: string, sortField: SortField, sortDirection: SortDirection) {
     if (sortField === field) {
         if (sortDirection === 'asc') {
             return {

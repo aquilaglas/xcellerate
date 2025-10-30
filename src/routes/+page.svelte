@@ -27,7 +27,7 @@
         onchange={handleImport}
 />
 <Header>
-    <div class="w-full flex justify-center bg-green-700 pt-[40%]">
+    <div class="w-full flex justify-center bg-green-700 pt-[50%] overscroll-none">
         <button type="button" class="clickable-card font-bold" onclick={() => {
         document.getElementById('fileInput')?.click();
     }}>

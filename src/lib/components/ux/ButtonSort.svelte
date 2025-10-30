@@ -7,7 +7,7 @@
     type Props = {
         sortField: SortField;
         sortDirection: SortDirection;
-        field: SortField;
+        field: string;
         title: string;
     };
 
