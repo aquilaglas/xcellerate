@@ -14,6 +14,7 @@
 
     $effect(() => {
         if (showModal) dialog?.showModal();
+        else if (!showModal) dialog?.close();
     });
 </script>
 

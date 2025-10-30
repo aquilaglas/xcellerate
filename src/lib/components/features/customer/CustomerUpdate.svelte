@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {updateCustomer} from "$lib/utils/customer.utils.js";
+    import {deleteCustomer, updateCustomer} from "$lib/utils/customer.utils.js";
     import {
         containerTypeColorOptions,
         type Customer,
@@ -13,6 +13,7 @@
     import FormInputDefault from "$lib/components/ux/forms/FormInputDefault.svelte";
     import FormInputArray from "$lib/components/ux/forms/FormInputArray.svelte";
     import Header from "$lib/components/ui/Header.svelte";
+    import Modal from "$lib/components/ui/Modal.svelte";
 
     type Props = {
         customer: Customer;
@@ -22,14 +23,7 @@
 
     let formData = $state<Customer>(customer);
     let isInitialized = $state(false);
-
-    function addAddress() {
-        formData.addresses.push('');
-    }
-
-    function removeAddress(index: number) {
-        formData.addresses.splice(index, 1);
-    }
+    let showModal = $state(false);
 
     onMount(() => {
         formData = {
@@ -45,6 +39,24 @@
         });
     });
 </script>
+
+<Modal bind:showModal title="Supression client">
+    <div class="flex flex-col gap-4 p-4">
+        <span class="text-red-500">Êtes-vous sûr de vouloir supprimer ce client ?</span>
+        <div class="w-full flex flex-row gap-4">
+            <button type="button"
+                class="btn-danger w-full"
+                onclick={() => {showModal = false; deleteCustomer(formData.id); goto('/customers');}}>
+                <span>Oui</span>
+            </button>
+            <button type="button"
+                class="btn-primary w-full"
+                onclick={() => {showModal = false}}>
+                <span>Non</span>
+            </button>
+        </div>
+    </div>
+</Modal>
 
 <Header>
     {#if isInitialized}
@@ -94,12 +106,15 @@
                 <div class="flex flex-col">
                     <span class="font-medium">Nouvelle colonne</span>
                     <button type="button"
-                            class="btn-primary sm:p-2 h-[42px]">
+                            class="btn-primary h-[42px]">
                         <span class="hidden sm:block">Ajouter une colonne</span>
                         <CirclePlus class="block sm:hidden ml-2 size-4"/>
                     </button>
                 </div>
             </div>
+            <button type="button" class="btn-danger mt-10" onclick={() => showModal = true}>
+                <span>Supprimer le client</span>
+            </button>
         </form>
     {/if}
 </Header>

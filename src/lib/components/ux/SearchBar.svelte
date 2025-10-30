@@ -10,7 +10,7 @@
 </script>
 
 <form>
-	<div class="btn-secondary gap-0 font-light p-0 group hover:bg-gray-300 dark:hover:bg-gray-800">
+	<div class="btn-secondary gap-0 font-light p-0 group hover:bg-gray-300 active:bg-gray-300 dark:hover:bg-gray-800 dark:active:bg-gray-800">
 	    <input class="w-full input border-2 shadow-none dark:border-gray-800" type="search" id="search-bar-input"
 					 placeholder="Rechercher un client par {searchField}" />
 		<button type="submit">

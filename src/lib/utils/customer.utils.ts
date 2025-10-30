@@ -22,6 +22,15 @@ export const updateCustomer = async (customer: Customer): Promise<Response> => {
     });
 };
 
+export const deleteCustomer = async (customerId: string): Promise<Response> => {
+    if (!browser) return new Response(JSON.stringify({ error: 'Error domain' }), {status: 500});
+
+    return await fetch('/api/customers/' + customerId, {
+        method: 'DELETE',
+        headers: {'Content-Type': 'application/json'},
+    });
+};
+
 export const formatCustomer = (row: Row): Customer => {
     const customer: Customer = createDefaultCustomer();
 
