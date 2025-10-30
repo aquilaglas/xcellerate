@@ -27,8 +27,8 @@
         onchange={handleImport}
 />
 <Header>
-    <div class="w-full flex justify-center bg-green-700 pt-[40vh] -translate-y-[28px] overscroll-none">
-        <button type="button" class="clickable-card font-bold" onclick={() => {
+    <div class="w-full flex justify-center bg-green-700 pt-[40vh] overscroll-none">
+        <button type="button" class="clickable-card font-bold -translate-y-[28px]" onclick={() => {
         document.getElementById('fileInput')?.click();
     }}>
             <span>Importer un Excel</span>

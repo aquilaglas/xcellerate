@@ -49,8 +49,6 @@
             {/each}
         </div>
     {/if}
-    <div class="h-[100px] bg-gradient-to-b from-gray-900 to-green-700">
-    </div>
     <button class="btn-primary fixed bottom-0 right-0 h-fit z-50 m-2"
             onclick={() => exportXlsData(data.sortedCustomers)}>
         <Download class="size-12"/>
