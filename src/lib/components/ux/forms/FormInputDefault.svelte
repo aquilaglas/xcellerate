@@ -1,4 +1,6 @@
 <script lang="ts">
+    import InputAutoResize from "$lib/components/ui/InputAutoResize.svelte";
+
     type Props = {
         value: string | null,
         title: string
@@ -9,5 +11,5 @@
 
 <label class="card">
     <span>{title}</span>
-    <input bind:value class="input" placeholder="Ajouter: {title}"/>
+    <InputAutoResize bind:value class="input" placeholder="Ajouter: {title}"/>
 </label>

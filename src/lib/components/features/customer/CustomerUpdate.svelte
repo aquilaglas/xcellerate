@@ -14,6 +14,7 @@
     import FormInputDefault from "$lib/components/ux/forms/FormInputDefault.svelte";
     import FormInputArray from "$lib/components/ux/forms/FormInputArray.svelte";
     import Modal from "$lib/components/ui/Modal.svelte";
+    import InputAutoResize from "$lib/components/ui/InputAutoResize.svelte";
 
     type Props = {
         customer: Customer;
@@ -102,8 +103,7 @@
             {#each Object.entries(formData.otherData) as [key, _]}
                 <label class="flex flex-col">
                     <span class="font-medium">{key}</span>
-                    <input bind:value={formData.otherData[key]} class="input"
-                           placeholder="Ajouter: {key.toLowerCase()}"/>
+                    <InputAutoResize bind:value={formData.otherData[key]} placeholder="Ajouter: {key.toLowerCase()}"/>
                 </label>
             {/each}
             <div class="flex flex-col">

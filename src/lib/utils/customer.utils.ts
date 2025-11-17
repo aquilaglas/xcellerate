@@ -104,8 +104,13 @@ const getFormattedKeyAndValue = (key: string, value: any): {formattedKey: keyof 
             formattedValue = value ? priorityMap[value] || 'aucune'  : 'aucune';
             break;
         case 'commentaires':
+        case 'commentaire':
             formattedKey = 'comments';
-            formattedValue = value ? value.split('\n') : [];
+            if (typeof value === 'string') {
+                formattedValue = value ? value.split('\n') : [];
+            } else {
+                formattedValue = '';
+            }
             break;
         //TODO: refaire les contacts
         case 'contacts':

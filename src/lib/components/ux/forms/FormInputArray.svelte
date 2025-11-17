@@ -1,5 +1,6 @@
 <script lang="ts">
     import {Trash2} from "lucide-svelte";
+    import InputAutoResize from "$lib/components/ui/InputAutoResize.svelte";
 
     type Props = {
         value: Array<string>,
@@ -23,7 +24,7 @@
     <span class="flex flex-col gap-2">
         {#each value as _, index}
             <div class="flex gap-2">
-                <input bind:value={value[index]} class="input w-full" placeholder="Ajouter: {title}"/>
+                <InputAutoResize bind:value={value[index]} placeholder="Ajouter: {title}"/>
                 <button type="button" onclick={() => removeFromArray(index)}
                         class="btn-danger w-[42px] h-[42px]">
                     <Trash2/>
