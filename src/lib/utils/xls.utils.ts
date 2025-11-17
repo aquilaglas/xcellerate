@@ -2,10 +2,11 @@ import * as XLSX from "xlsx";
 import type {Customer} from "$lib/types/customer.types.js";
 import {createCustomer, formatCustomer} from "$lib/utils/customer.utils.js";
 import type {Row, SheetData} from "$lib/types/xls.types.js";
+import {StatusEnum} from "$lib/enums/status.enum.js";
 
-export const importXlsData = async (event: Event): Promise<"success" | "failed" | "loading"> => {
+export const importXlsData = async (event: Event): Promise<StatusEnum> => {
     const file = (event.target as HTMLInputElement)?.files?.[0];
-    if (!file) return 'failed';
+    if (!file) return StatusEnum.ERROR;
 
     const workbook = XLSX.read(await file.arrayBuffer(), {type: "array"});
 
@@ -15,11 +16,11 @@ export const importXlsData = async (event: Event): Promise<"success" | "failed" 
         if (jsonSheet.length === 0) throw new Error("Le fichier Excel est vide ou mal formaté.");
 
         if (!(await formatSheetAndSaveData(sheetName, jsonSheet))) {
-            return 'failed';
+            return StatusEnum.ERROR;
         }
     }
 
-    return 'success';
+    return StatusEnum.SUCCESS;
 };
 
 export const exportXlsData = (customers: Customer[]) => {

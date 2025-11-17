@@ -67,13 +67,8 @@ export const createDefaultCustomer = (): Customer => {
 const getFormattedKeyAndValue = (key: string, value: any): {formattedKey: keyof Customer, formattedValue: any} => {
     let formattedKey: keyof Customer;
     let formattedValue;
-    let triggerKey: string;
+    let triggerKey: string = key.toLowerCase();
 
-    if (typeof key === 'string') {
-        triggerKey = key.toLowerCase();
-    } else {
-        triggerKey = key;
-    }
     switch (triggerKey) {
         case 'id':
             formattedKey = key.toLowerCase() as keyof Customer;
@@ -91,8 +86,8 @@ const getFormattedKeyAndValue = (key: string, value: any): {formattedKey: keyof 
             formattedKey = 'type';
             formattedValue = value || 'inconnu';
             break;
-        case 'casier /carton':
         case 'type de contenant':
+        case 'casier/carton':
             formattedKey = 'containerType';
             formattedValue = value || 'inconnu';
             break;

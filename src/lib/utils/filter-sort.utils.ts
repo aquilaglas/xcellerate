@@ -1,37 +1,37 @@
 import {
     containerTypeOrder,
-    priorityOrder,
-    type SortDirection,
-    type SortField,
+    priorityOrder, type SearchParams, type SortDirection,
     statusOrder,
     typeOrder
-} from "$lib/types/sort.types.js";
+} from "$lib/types/filter-sort.types.js";
 import type {Customer} from "$lib/types/customer.types.js";
 
-export function toggleSort(field: string, sortField: SortField, sortDirection: SortDirection) {
+export function toggleSort(field: string, params: SearchParams) {
+    const sortField = (params['sortField'] ?? 'name') as keyof Customer;
+    const sortDirection = params['sortDirection'] ?? 'asc';
+
     if (sortField === field) {
-        if (sortDirection === 'asc') {
-            return {
-                field: sortField,
-                direction: 'desc'
-            }
-        } else if (sortDirection === 'desc') {
-            return {
-                field: sortField,
-                direction: 'asc'
-            }
-        }
+        sortDirection === 'asc' ? params['sortDirection'] = 'desc' : params['sortDirection'] = 'asc';
+        return params;
     } else {
-        return {
-            field,
-            direction: 'asc'
-        }
+        params['sortField'] = field;
+        params['sortDirection'] = 'asc';
+        delete params['search'];
+        return params;
     }
 }
 
-export const sortCustomers = (customers: Customer[], sortField: SortField, sortDirection: SortDirection) => {
-    if (!sortField || !sortDirection) {
-        return customers;
+export const filterAndSortCustomers = (customers: Customer[], params: SearchParams) => {
+    const sortField = (params['sortField'] ?? 'name') as keyof Customer;
+    const sortDirection = (params['sortDirection'] ?? 'asc') as SortDirection;
+    const search = params['search'] ?? '';
+
+    if (search !== '') {
+        customers = customers.filter(customer => {
+            if (typeof customer[sortField] === 'string') {
+                return customer[sortField].toLowerCase().includes(search.toLowerCase());
+            }
+        });
     }
 
     customers.sort((a, b) => {
@@ -81,9 +81,3 @@ export const sortCustomers = (customers: Customer[], sortField: SortField, sortD
 
     return customers;
 };
-
-export const filterCustomers = (customers: Customer[], sortField: SortField, search: string) => {
-    if (search === '') return customers;
-
-    return customers.filter(customer => customer[sortField]?.toLowerCase().includes(search.toLowerCase()));
-}

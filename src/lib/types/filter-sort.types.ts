@@ -1,6 +1,6 @@
-export type SortField = 'name' | 'type' | 'containerType' | 'priority' | 'status' | 'lastCommunication';
-
 export type SortDirection = 'asc' | 'desc';
+
+export type SearchParams = Record<string, string>;
 
 export const typeOrder: Record<string, number> = {
     'festival': 1,

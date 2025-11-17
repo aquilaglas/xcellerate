@@ -1,16 +1,13 @@
-import type {SortDirection, SortField} from "$lib/types/sort.types.js";
-import {filterCustomers, sortCustomers} from "$lib/utils/sort.utils.js";
+import {filterAndSortCustomers} from "$lib/utils/filter-sort.utils.js";
+import type {SearchParams} from "$lib/types/filter-sort.types.js";
 
 export const load = async ({ url, fetch }) => {
+    const params: SearchParams = Object.fromEntries(url.searchParams.entries());
+
     const res = await fetch('/api/customers');
     const customers = await res.json();
 
-    const sortField = url.searchParams.get('sortField') as SortField ?? 'name';
-    const sortDirection = url.searchParams.get('sortDirection') as SortDirection ?? 'asc';
-    const search = url.searchParams.get('search') as string ?? '';
+    const filteredAndSortedCustomers = filterAndSortCustomers(customers, params);
 
-    const filteredCustomers = filterCustomers(customers, sortField, search);
-    const sortedCustomers = sortCustomers(filteredCustomers, sortField, sortDirection);
-
-    return { sortedCustomers, sortField, sortDirection, search };
+    return { filteredAndSortedCustomers, searchParams: params };
 };

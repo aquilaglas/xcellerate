@@ -44,7 +44,7 @@
     <button class="flex items-center rounded-4xl py-1 px-2 text-green-50 "
             style="background-color:var({options[value] ?? '--color-black'});"
             type="button" onclick={toggleDropdown} title={title}>
-        <span class="text-xs">{value ? value.toLowerCase() : '?'}</span>
+        <span class="text-xs">{typeof value === 'string' ? value.toLowerCase() : '?'}</span>
         {#if !disabled}
             {#if isOpen}
                 <CircleArrowUp class="ml-2 size-4"/>

@@ -6,6 +6,7 @@
         typeColorOptions
     } from "$lib/types/customer.types.js";
     import SelectorBadge from "$lib/components/ux/SelectorBadge.svelte";
+    import {goto} from "$app/navigation";
 
     type Props = {
         customer: Customer;
@@ -16,7 +17,6 @@
 
     let customerData = $state<Customer>(customer);
 </script>
-
 
 <a href="/customers/{customerData.id}"
    class="clickable-card">

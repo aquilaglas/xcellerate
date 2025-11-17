@@ -2,37 +2,21 @@
     import type {PageProps} from './$types';
     import {goto} from "$app/navigation";
     import Modal from "$lib/components/ui/Modal.svelte";
-    import {CircleArrowDown, CircleArrowUp, CirclePlus, Download, Grid2x2Check, X} from "lucide-svelte";
+    import {Download} from "lucide-svelte";
     import CustomerCard from "$lib/components/features/customer/CustomerCard.svelte";
     import {exportXlsData} from "$lib/utils/xls.utils.js";
     import Header from "$lib/components/ui/Header.svelte";
-    import ButtonSort from "$lib/components/ux/ButtonSort.svelte";
-    import SearchBar from "$lib/components/ux/SearchBar.svelte";
+    import FilterSort from "$lib/components/ux/FilterSort.svelte";
 
     const {data}: PageProps = $props();
-
-    let filterData: Record<string, string> = {
-        name: "nom",
-        type: "type",
-        containerType: "contenant",
-        priority: "priorité",
-        status: "statut",
-        lastCommunication: "dernière com"
-    };
 </script>
 
 <Header withButtons={true}>
     <div class="flex flex-col gap-4 p-4">
-        <SearchBar searchField={data.sortField} search={data.search} title={filterData[data.sortField]}
-                   fallbackUrl="/customers?sortField={data.sortField}&sortDirection={data.sortDirection}" />
-        <div class="flex flex-wrap gap-2">
-            {#each Object.entries(filterData) as [key, value]}
-                <ButtonSort sortField={data.sortField} sortDirection={data.sortDirection} field={key} title={value}/>
-            {/each}
-        </div>
-        <h2 class="text-2xl font-bold text-green-700">{data.sortedCustomers.length} clients</h2>
+        <FilterSort searchParams={data.searchParams} />
+        <h2 class="text-2xl font-bold text-green-700">{data.filteredAndSortedCustomers.length} clients</h2>
     </div>
-    {#if !data.sortedCustomers || data.sortedCustomers.length === 0}
+    {#if !data.filteredAndSortedCustomers || data.filteredAndSortedCustomers.length === 0}
         <Modal showModal={true} title="Importation Excel">
             <div class="flex flex-col gap-4 p-4">
                 <span>Aucune donnée à afficher</span>
@@ -45,13 +29,15 @@
         </Modal>
     {:else}
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7 gap-4 p-4 pt-0">
-            {#each data.sortedCustomers as customer}
+            {#each data.filteredAndSortedCustomers as customer}
                 <CustomerCard {customer}/>
             {/each}
         </div>
     {/if}
+
+    <!-- EXPORT DU FICHIER -->
     <button class="btn-primary fixed bottom-0 right-0 h-fit z-50 m-2"
-            onclick={() => exportXlsData(data.sortedCustomers)}>
+            onclick={() => exportXlsData(data.filteredAndSortedCustomers)}>
         <Download class="size-12"/>
     </button>
 </Header>
