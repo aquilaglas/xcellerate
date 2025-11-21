@@ -12,7 +12,7 @@ export const load = async ({fetch, params}) => {
 
         return {customer};
     } catch (err) {
-        console.error('Erreur dans load:', err);
+        console.error('[LOAD] Error loading: customer/' + params.id, err);
         throw redirect(303, '/customers');
     }
 };

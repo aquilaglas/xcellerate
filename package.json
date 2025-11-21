@@ -5,15 +5,15 @@
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
-        "prepack": "svelte-kit sync && svelte-package && publint",
+		"prepack": "svelte-kit sync && svelte-package && publint",
 		"package": "svelte-kit sync && svelte-package",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"test:e2e": "playwright test",
 		"test": "npm run test:e2e && npm run test:unit -- --run",
 		"test:unit": "vitest",
-        "lint:pkg": "publint"
-    },
+		"lint:pkg": "publint"
+	},
 	"files": [
 		"dist",
 		"!dist/**/*.test.*",
@@ -58,6 +58,7 @@
 		"svelte"
 	],
 	"dependencies": {
+		"@supabase/supabase-js": "^2.81.1",
 		"lucide-svelte": "^0.544.0",
 		"xlsx": "^0.18.5"
 	}

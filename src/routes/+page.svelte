@@ -1,22 +1,34 @@
 <script lang="ts">
-    import {importXlsData} from "$lib/utils/xls.utils.js";
     import Modal from "$lib/components/ui/Modal.svelte";
     import Header from "$lib/components/ui/Header.svelte";
+    import {type ImportResult, importXlsData} from "$lib/utils/xls.utils.js";
     import {goToCustomers} from "$lib/utils/navigation.utils.js";
-    import {StatusEnum} from "$lib/enums/status.enum.js";
 
-    let status: StatusEnum = $state(StatusEnum.LOADING);
-
+    let loading = $state(false);
     let showModal = $state(false);
+    let result: ImportResult = $state({
+        createdSheets: 0,
+        createdCustomers: 0,
+        errors: []
+    });
 
     async function handleImport(event: Event) {
-        status = StatusEnum.LOADING;
-        showModal = true;
-        status = await importXlsData(event);
+        loading = true;
+        result = await importXlsData(event);
 
-        if (status === StatusEnum.ERROR) {
-            console.error("Erreur lors de l'importation du fichier Excel.");
+        console.log(
+            `${result.createdSheets} page${result.createdSheets > 1 ? 's' : ''} et ${result.createdCustomers} client${result.createdCustomers > 1 ? 's' : ''} créés`
+        );
+
+        for (const error of result.errors) {
+            console.error(
+                error.message,
+                error.sheetName ? 'nom de la page: ' + error.sheetName : "",
+                error.rowIndex ? 'numéro de ligne: ' + error.rowIndex : ""
+            );
         }
+        loading = false;
+        showModal = true;
     }
 </script>
 
@@ -27,7 +39,7 @@
         class="hidden"
         onchange={handleImport}
 />
-<Header>
+<Header bind:loading>
     <div class="w-full flex justify-center bg-green-700 pt-[40vh] overscroll-none">
         <button type="button" class="clickable-card font-bold -translate-y-[28px]"
                 onclick={() => document.getElementById('fileInput')?.click()}>
@@ -38,12 +50,13 @@
 
 <Modal bind:showModal title="Importation Excel">
     <div class="flex flex-col gap-4 p-4">
-        {#if status === 'loading'}
-            <span>Importation en cours...</span>
-        {:else if status === StatusEnum.ERROR}
-            <span class="text-red-500">Échec de l'importation. Veuillez réessayer.</span>
-        {:else if status === StatusEnum.SUCCESS}
-            <span>Importation Réussie !</span>
+        {#if result.createdSheets === 0}
+            <span class="text-red-500">
+                Échec de l'importation {result.errors.length} erreurs. Veuillez réessayer.
+            </span>
+        {:else}
+            <span>Importation Réussie ! {result.createdCustomers} client{result.createdCustomers > 1 ? 's' : ''}
+                ajouté{result.createdCustomers > 1 ? 's' : ''}.</span>
             <button type="button"
                     class="btn-primary"
                     onclick={async () => {showModal = false; await goToCustomers();}}>

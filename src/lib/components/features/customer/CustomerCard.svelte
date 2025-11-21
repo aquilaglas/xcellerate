@@ -1,12 +1,10 @@
 <script lang="ts">
-    import {
-        containerTypeColorOptions,
-        type Customer,
-        priorityColorOptions, statusColorOptions,
-        typeColorOptions
-    } from "$lib/types/customer.types.js";
     import SelectorBadge from "$lib/components/ux/SelectorBadge.svelte";
-    import {goto} from "$app/navigation";
+    import type {Customer} from "$lib/types/models.js";
+    import {TypeColorMap, TypeEnum} from "$lib/enums/type.enum.js";
+    import {ContainerTypeColorMap, ContainerTypeEnum} from "$lib/enums/container-type.enum.js";
+    import {PriorityColorMap, PriorityEnum} from "$lib/enums/priority.enum.js";
+    import {StatusColorMap, StatusEnum} from "$lib/enums/status.enum.js";
 
     type Props = {
         customer: Customer;
@@ -25,13 +23,14 @@
     <div class="mb-2">
         <span class="text-gray-500 dark:text-gray-300 text-lg">{customerData.lastCommunication ?? '?'}</span>
         <div class="flex flex-wrap gap-2">
-            <SelectorBadge options={typeColorOptions} bind:value={customerData.type} title="Type" disabled={true}/>
-            <SelectorBadge options={containerTypeColorOptions} bind:value={customerData.containerType}
-                           title="Type de contenant" disabled={true}/>
-            <SelectorBadge options={priorityColorOptions} bind:value={customerData.priority} title="Priorité"
-                           disabled={true}/>
-            <SelectorBadge options={statusColorOptions} bind:value={customerData.status} title="Statut"
-                           disabled={true}/>
+            <SelectorBadge options={Object.values(TypeEnum)} colors={TypeColorMap}
+                           bind:value={customerData.type} title="Type" disabled={true}/>
+            <SelectorBadge options={Object.values(ContainerTypeEnum)} colors={ContainerTypeColorMap}
+                           bind:value={customerData.containerType} title="Type de contenant" disabled={true}/>
+            <SelectorBadge options={Object.values(PriorityEnum)} colors={PriorityColorMap}
+                           bind:value={customerData.priority} title="Priorité" disabled={true}/>
+            <SelectorBadge options={Object.values(StatusEnum)} colors={StatusColorMap}
+                           bind:value={customerData.status} title="Statut" disabled={true}/>
         </div>
     </div>
 

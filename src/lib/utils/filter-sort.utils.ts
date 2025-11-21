@@ -4,7 +4,7 @@ import {
     statusOrder,
     typeOrder
 } from "$lib/types/filter-sort.types.js";
-import type {Customer} from "$lib/types/customer.types.js";
+import type {Customer} from "$lib/types/models.js";
 
 export function toggleSort(field: string, params: SearchParams) {
     const sortField = (params['sortField'] ?? 'name') as keyof Customer;

@@ -1,28 +1,48 @@
-import type { Handle } from '@sveltejs/kit';
-import type {Customer} from "$lib/types/customer.types.js";
-
-const sessions = new Map<string, Array<Customer>>();
+import {type Handle, redirect} from "@sveltejs/kit";
+import {createUserClient, setAuthCookies} from "$lib/server/supabase.js";
 
 export const handle: Handle = async ({ event, resolve }) => {
-    let sessionId = event.cookies.get('session_id');
+    let access_token = event.cookies.get('sb-access-token') || null;
+    let refresh_token = event.cookies.get('sb-refresh-token') || null;
+    let supabase = createUserClient(access_token, refresh_token);
 
-    if (!sessionId) {
-        sessionId = crypto.randomUUID();
-        event.cookies.set('session_id', sessionId, {
-            path: '/',
-            maxAge: 60 * 60 * 24,
-            httpOnly: true,
-            sameSite: 'lax'
-        });
+    let { data: { user } } = await supabase.auth.getUser();
+
+    if (!user && refresh_token) {
+        const { data, error } = await supabase.auth.refreshSession({ refresh_token });
+
+        if (!error && data?.session) {
+            access_token = data.session.access_token;
+            refresh_token = data.session.refresh_token;
+
+            setAuthCookies(event.cookies, access_token, refresh_token);
+
+            supabase = createUserClient(access_token, refresh_token);
+            user = data.session.user;
+        }
     }
 
-    // @ts-ignore
-    event.locals.customers = sessions.get(sessionId) ?? [] ;
+    event.locals.user = user;
+    event.locals.supabase = supabase;
 
-    const response = await resolve(event);
+    const publicRoutes = ['/login', '/register'];
+    const pathname = event.url.pathname;
+    const isPublic = publicRoutes.some(r => pathname.startsWith(r));
+    const isApi = pathname.startsWith('/api');
 
-    // @ts-ignore
-    sessions.set(sessionId, event.locals.customers);
+    if (isApi) {
+        if (!user && !pathname.startsWith('/api/auth')) {
+            return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+                status: 401,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
+        return resolve(event);
+    }
 
-    return response;
+    if (!user && !isPublic) {
+        throw redirect(303, '/login');
+    }
+
+    return resolve(event);
 };

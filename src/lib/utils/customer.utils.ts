@@ -1,22 +1,28 @@
-import type {Row} from "$lib/types/xls.types.js";
 import {browser} from "$app/environment";
-import {type Customer, priorityMap} from "$lib/types/customer.types.js";
+import type {Customer} from "$lib/types/models.js";
+import {PriorityEnum, PrioritySortMap} from "$lib/enums/priority.enum.js";
+import type {CustomerCreateDTO} from "$lib/dto/customer-create.dto.js";
+import {StatusEnum} from "$lib/enums/status.enum.js";
+import {ContainerTypeEnum} from "$lib/enums/container-type.enum.js";
+import {TypeEnum} from "$lib/enums/type.enum.js";
 
-export const createCustomer = async (customer: Customer): Promise<Response> => {
+export const createCustomer = async (customer: CustomerCreateDTO, sheetId: string): Promise<Response> => {
     if (!browser) return new Response(JSON.stringify({ error: 'Error domain' }), {status: 500});
 
-    return await fetch('/api/customers', {
+    return await fetch(`/api/sheets/${sheetId}/customers`, {
         method: 'POST',
+        credentials: "include",
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(customer)
     })
 };
 
-export const updateCustomer = async (customer: Customer): Promise<Response> => {
+export const updateCustomer = async (customer: Partial<Customer>, customerId: string): Promise<Response> => {
     if (!browser) return new Response(JSON.stringify({ error: 'Error domain' }), {status: 500});
 
-    return await fetch('/api/customers/' + customer.id, {
-        method: 'PATCH',
+    return await fetch('/api/customers/' + customerId, {
+        method: 'PUT',
+        credentials: "include",
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(customer),
     });
@@ -27,100 +33,122 @@ export const deleteCustomer = async (customerId: string): Promise<Response> => {
 
     return await fetch('/api/customers/' + customerId, {
         method: 'DELETE',
+        credentials: "include",
         headers: {'Content-Type': 'application/json'},
     });
 };
 
-export const formatCustomer = (row: Row): Customer => {
-    const customer: Customer = createDefaultCustomer();
+export function createDefaultCustomer(): CustomerCreateDTO {
+    return {
+        name: "",
+        addresses: [],
+        type: TypeEnum.INCONNU,
+        contacts: [],
+        containerType: ContainerTypeEnum.INCONNU,
+        status: StatusEnum.AUCUN,
+        lastCommunication: null,
+        priority: PriorityEnum.AUCUNE,
+        comments: [],
+        otherData: {}
+    };
+}
 
-    Object.entries(row).forEach(([key, value]) => {
-        const {formattedKey, formattedValue} = getFormattedKeyAndValue(key, value);
+const FIELD_MAP: Record<string, keyof CustomerCreateDTO | "otherData"> = {
+    "nom": "name",
+    "name": "name",
 
-        if (formattedKey === 'otherData') {
-            customer.otherData[formattedValue.key] = formattedValue.value;
-        } else {
-            // @ts-ignore
-            customer[formattedKey] = formattedValue;
+    "adresses": "addresses",
+    "adresse": "addresses",
+
+    "type": "type",
+
+    "type de contenant": "containerType",
+    "casier/carton": "containerType",
+
+    "statut": "status",
+
+    "date dernier contact": "lastCommunication",
+    "last communication": "lastCommunication",
+
+    "priorité": "priority",
+
+    "commentaire": "comments",
+    "commentaires": "comments",
+
+    "contact": "contacts",
+    "contacts": "contacts"
+};
+
+export function formatCustomer(row: Record<string, any>): CustomerCreateDTO {
+    const customer = createDefaultCustomer();
+
+    for (const [rawKey, value] of Object.entries(row)) {
+        const key = rawKey.trim().toLowerCase();
+        const mappedField = FIELD_MAP[key];
+
+        if (!mappedField) {
+            customer.otherData[rawKey] = cleanValue(value);
+            continue;
         }
-    })
+
+        switch (mappedField) {
+            case "addresses":
+            case "contacts":
+            case "comments":
+                customer[mappedField] = parseListValue(value);
+                break;
+
+            case "priority":
+                customer.priority = normalizePriority(value);
+                break;
+
+            case "lastCommunication":
+                if (typeof value === 'number') {
+                    const jsDate = new Date((value - 25569) * 86400 * 1000);
+                    customer.lastCommunication = jsDate.toISOString();
+                } else if (typeof value === 'string' && value.trim() !== '') {
+                    customer.lastCommunication = new Date(value).toISOString();
+                } else {
+                    customer.lastCommunication = null;
+                }
+                break;
+
+            default:
+                if (mappedField !== "otherData") {
+                    customer[mappedField] = cleanValue(value);
+                }
+                break;
+        }
+    }
 
     return customer;
 }
 
-export const createDefaultCustomer = (): Customer => {
-    return {
-        id: '',
-        name: '',
-        addresses: [],
-        type: 'inconnu',
-        contacts: [],
-        containerType: 'inconnu',
-        status: 'aucun',
-        lastCommunication: null,
-        priority: priorityMap[5],
-        comments: [],
-        otherData: {},
-    } as Customer;
+function cleanValue(value: any): string {
+    return value ? String(value).trim() : "";
 }
 
-const getFormattedKeyAndValue = (key: string, value: any): {formattedKey: keyof Customer, formattedValue: any} => {
-    let formattedKey: keyof Customer;
-    let formattedValue;
-    let triggerKey: string = key.toLowerCase();
+function parseListValue(value: any): string[] {
+    if (!value) return [];
+    if (typeof value !== "string") return [];
 
-    switch (triggerKey) {
-        case 'id':
-            formattedKey = key.toLowerCase() as keyof Customer;
-            formattedValue = value;
-            break;
-        case 'nom':
-            formattedKey = 'name';
-            formattedValue = value;
-            break;
-        case 'adresses':
-            formattedKey = 'addresses';
-            formattedValue = value ? value.split('\n') : [];
-            break;
-        case 'type':
-            formattedKey = 'type';
-            formattedValue = value || 'inconnu';
-            break;
-        case 'type de contenant':
-        case 'casier/carton':
-            formattedKey = 'containerType';
-            formattedValue = value || 'inconnu';
-            break;
-        case 'statut':
-            formattedKey = 'status';
-            formattedValue = value || 'aucun';
-            break;
-        case 'date dernier contact':
-            formattedKey = 'lastCommunication';
-            formattedValue = value;
-            break;
-        case 'priorité':
-            formattedKey = 'priority';
-            formattedValue = value ? priorityMap[value] || 'aucune'  : 'aucune';
-            break;
-        case 'commentaires':
-        case 'commentaire':
-            formattedKey = 'comments';
-            if (typeof value === 'string') {
-                formattedValue = value ? value.split('\n') : [];
-            } else {
-                formattedValue = '';
-            }
-            break;
-        //TODO: refaire les contacts
-        case 'contacts':
-            formattedKey = 'contacts';
-            formattedValue = value ? value.split('\n') : [];
-            break;
-        default:
-            formattedKey = 'otherData';
-            formattedValue = { key, value };
-            break;
+    return value
+        .split("\n")
+        .map(v => v.trim())
+        .filter(Boolean);
+}
+
+function normalizePriority(value: any): string {
+    if (!value) return PriorityEnum.AUCUNE;
+
+    if (typeof value === "number")
+        return PrioritySortMap[value] as PriorityEnum;
+
+    const priority = String(value).trim().toUpperCase();
+
+    if (priority in PriorityEnum) {
+        return priority as PriorityEnum;
     }
-    return {formattedKey: formattedKey, formattedValue: formattedValue};
+
+    return PriorityEnum.AUCUNE;
 }
