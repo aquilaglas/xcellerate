@@ -2,7 +2,6 @@
     // @ts-ignore
     import {Search} from "lucide-svelte";
     import Selector from "$lib/components/ux/Selector.svelte";
-    import {goToCustomers} from "$lib/utils/navigation.utils.js";
     import {translate} from "$lib/utils/translator.utils.js";
     import type {SearchParams} from "$lib/types/filter-sort.types.js";
     import type {Customer} from "$lib/types/models.js";
@@ -31,26 +30,17 @@
     let oldSearch: string = $state(searchParams['search'] ?? '');
     let refSelector: Selector | undefined = $state();
 
-    async function handleSearch(event?: SubmitEvent) {
-        event?.preventDefault();
-
-        searchParams['search'] = search;
-        await goToCustomers(searchParams);
-        window.location.reload();
-    }
-
     $effect(() => {
         if (options[searchField] && search !== oldSearch) {
-            handleSearch();
             oldSearch = search;
         }
     });
 </script>
 
-<form onsubmit={handleSearch}>
+<form>
     <div class="btn-secondary gap-0 font-light p-0 group hover:bg-gray-300 active:bg-gray-300 dark:hover:bg-gray-800 dark:active:bg-gray-800">
         {#if options[searchField]}
-            <Selector bind:this={refSelector} options={options[searchField]} bind:value={search}>
+            <Selector bind:this={refSelector} options={options[searchField].map((value => ({label: value, value: value})))} bind:selectedValue={search}>
                 <button class="w-full input border-2 shadow-none dark:border-gray-800 text-left" type="button"
                         onclick={refSelector.toggleDropdown} title={translate(searchField)}>
                     {#if search === ''}

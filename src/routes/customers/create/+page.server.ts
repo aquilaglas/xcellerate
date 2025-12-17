@@ -12,9 +12,9 @@ export const load = async ({ fetch }) => {
             throw new Error('Échec de la requête');
         }
 
-        const customer = await res.json();
+        const data = await res.json();
 
-        return {customer};
+        throw redirect(303, '/customers/' +  data.customer.id);
     } catch (err) {
         console.error('[LOAD] Error failed to create customer', err);
         throw redirect(303, '/customers');

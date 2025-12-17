@@ -6,13 +6,12 @@ export const load: PageServerLoad = async ({ locals }) => {
 
     const { data, count } = await locals.supabase
         .from('sheets')
-        .select('id, name', { count: 'exact' })
+        .select('id', { count: 'exact' })
         .eq('user_id', locals.user.id)
         .limit(1);
 
-    console.log('[LOG] [+page.server.ts::load]', data);
     if ((count || 0) > 0) {
-        throw redirect(303, '/customers?sortField=name&sortDirection=asc&sheet=' +  data?.[0].name);
+        throw redirect(303, '/customers?sheet=' +  data?.[0].id);
     }
 
     return {};

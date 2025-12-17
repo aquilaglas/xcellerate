@@ -2,7 +2,7 @@
     import Modal from "$lib/components/ui/Modal.svelte";
     import Header from "$lib/components/ui/Header.svelte";
     import {type ImportResult, importXlsData} from "$lib/utils/xls.utils.js";
-    import {goToCustomers} from "$lib/utils/navigation.utils.js";
+    import {goto} from "$app/navigation";
 
     let loading = $state(false);
     let showModal = $state(false);
@@ -11,6 +11,11 @@
         createdCustomers: 0,
         errors: []
     });
+
+    async function handleClick() {
+        showModal = false;
+        goto('/customers');
+    }
 
     async function handleImport(event: Event) {
         loading = true;
@@ -59,7 +64,7 @@
                 ajouté{result.createdCustomers > 1 ? 's' : ''}.</span>
             <button type="button"
                     class="btn-primary"
-                    onclick={async () => {showModal = false; await goToCustomers();}}>
+                    onclick={handleClick}>
                 <span>Continuer</span>
             </button>
         {/if}

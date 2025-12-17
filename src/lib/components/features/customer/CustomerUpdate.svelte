@@ -19,7 +19,7 @@
         customer: Customer;
     };
 
-    let {customer}: Props = $props();
+    let {customer = $bindable()}: Props = $props();
 
     let isInitialized = $state(false);
     let original = $state<Customer>(customer);
@@ -29,7 +29,7 @@
     async function onDelete() {
         showModal = false;
         await deleteCustomer(customer.id);
-        await goBackCustomers();
+        goBackCustomers();
     }
 
     function getDiff(original: any, updated: any): any {

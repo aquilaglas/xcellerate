@@ -12,64 +12,61 @@
     };
 
     const {customer}: Props = $props();
-
-    let customerData = $state<Customer>(customer);
 </script>
 
-<a href="/customers/{customerData.id}"
-   class="clickable-card">
-    <span class="text-4xl mb-4">{customerData.name && customerData.name !== '' ? customerData.name : '?'}</span>
+<a href="/customers/{customer.id}" class="clickable-card">
+    <span class="text-4xl mb-4">{customer.name && customer.name !== '' ? customer.name : '?'}</span>
 
     <div class="mb-2">
-        <span class="text-gray-500 dark:text-gray-300 text-lg">{customerData.lastCommunication ?? '?'}</span>
+        <span class="text-gray-500 dark:text-gray-300 text-lg">{customer.lastCommunication ?? '?'}</span>
         <div class="flex flex-wrap gap-2">
             <SelectorBadge options={Object.values(TypeEnum)} colors={TypeColorMap}
-                           bind:value={customerData.type} title="Type" disabled={true}/>
+                           value={customer.type} title="Type" disabled={true}/>
             <SelectorBadge options={Object.values(ContainerTypeEnum)} colors={ContainerTypeColorMap}
-                           bind:value={customerData.containerType} title="Type de contenant" disabled={true}/>
+                           value={customer.containerType} title="Type de contenant" disabled={true}/>
             <SelectorBadge options={Object.values(PriorityEnum)} colors={PriorityColorMap}
-                           bind:value={customerData.priority} title="Priorité" disabled={true}/>
+                           value={customer.priority} title="Priorité" disabled={true}/>
             <SelectorBadge options={Object.values(StatusEnum)} colors={StatusColorMap}
-                           bind:value={customerData.status} title="Statut" disabled={true}/>
+                           value={customer.status} title="Statut" disabled={true}/>
         </div>
     </div>
 
     <div class="flex flex-col border-b border-b-gray-900 dark:border-b-gray-300 py-1">
         <div class="flex flex-wrap gap-2 gap-y-0">
             <span class="text-green-700 font-bold text-xl">Adresses:</span>
-            <span class="text-lg truncate">{customerData.addresses.length}</span>
+            <span class="text-lg truncate">{customer.addresses.length}</span>
         </div>
         <div class="text-lg truncate">
-            {#each customerData.addresses as address, index}
-                {@const isLast = index === customerData.addresses.length - 1}
+            {#each customer.addresses as address, index}
+                {@const isLast = index === customer.addresses.length - 1}
                 <span>{address}{isLast ? '' : ', '}</span>
             {/each}
         </div>
     </div>
 
-    <!-- @TODO boutton voir les contacts -->
+    <!-- @TODO bouton voir les contacts -->
     <div class="flex flex-col border-b border-b-gray-900 dark:border-b-gray-300 py-1">
         <div class="flex flex-wrap gap-2 gap-y-0">
             <span class="text-green-700 font-bold text-xl">Contacts:</span>
-            <span class="text-lg truncate">{customerData.contacts.length}</span>
+            <span class="text-lg truncate">{customer.contacts.length}</span>
         </div>
         <div class="text-lg truncate">
-            {#each customerData.contacts as address, index}
-                {@const isLast = index === customerData.contacts.length - 1}
+            {#each customer.contacts as address, index}
+                {@const isLast = index === customer.contacts.length - 1}
                 <span>{address}{isLast ? '' : ', '}</span>
             {/each}
         </div>
     </div>
 
-    <!-- @TODO boutton voir les commentaires -->
+    <!-- @TODO bouton voir les commentaires -->
     <div class="flex flex-col pt-1">
         <div class="flex flex-wrap gap-2 gap-y-0">
             <span class="text-green-700 font-bold text-xl">Commentaires:</span>
-            <span class="text-lg truncate">{customerData.comments.length}</span>
+            <span class="text-lg truncate">{customer.comments.length}</span>
         </div>
         <div class="text-lg truncate">
-            {#each customerData.comments as address, index}
-                {@const isLast = index === customerData.comments.length - 1}
+            {#each customer.comments as address, index}
+                {@const isLast = index === customer.comments.length - 1}
                 <span>{address}{isLast ? '' : ', '}</span>
             {/each}
         </div>

@@ -1,21 +1,21 @@
 <script lang="ts">
     type Props = {
-        options: string[];
-        value: string;
+        options: { label: string; value: string }[];
+        selectedValue: string;
         isOpen?: boolean,
         children?: any
     };
 
-    let {options, value = $bindable(), isOpen = $bindable(false), children}: Props = $props();
+    let {options, selectedValue = $bindable(), isOpen = $bindable(false), children}: Props = $props();
 
-    const filteredOptions = options.filter((o) => o !== value);
+    const filteredOptions = options.filter((o) => o.value !== selectedValue);
 
     export function toggleDropdown() {
         isOpen = !isOpen;
     }
 
-    function selectOption(option: string) {
-        value = option;
+    function selectOption(optionValue: string) {
+        selectedValue = optionValue;
         isOpen = false;
     }
 
@@ -58,11 +58,11 @@
                 {#each filteredOptions as option}
                     <button
                             type="button"
-                            onclick={() => selectOption(option)}
+                            onclick={() => selectOption(option.value)}
                             class="w-full text-left px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-800
                             active:bg-gray-200 dark:active:bg-gray-800 transition-colors"
                     >
-                        {option}
+                        {option.label}
                     </button>
                 {/each}
             {/if}

@@ -16,25 +16,69 @@ export function toggleSort(field: string, params: SearchParams) {
     } else {
         params['sortField'] = field;
         params['sortDirection'] = 'asc';
-        delete params['search'];
         return params;
     }
 }
 
 export const filterAndSortCustomers = (customers: Customer[], params: SearchParams) => {
-    const sortField = (params['sortField'] ?? 'name') as keyof Customer;
-    const sortDirection = (params['sortDirection'] ?? 'asc') as SortDirection;
-    const search = params['search'] ?? '';
+    let filtered = [...customers];
 
-    if (search !== '') {
-        customers = customers.filter(customer => {
-            if (typeof customer[sortField] === 'string') {
-                return customer[sortField].toLowerCase().includes(search.toLowerCase());
+    // FILTRES MULTI-CHAMPS (logique AND)
+
+    // Filtre par nom (recherche texte)
+    if (params['name']) {
+        const searchTerm = params['name'].toLowerCase();
+        filtered = filtered.filter(customer =>
+            customer.name?.toLowerCase().includes(searchTerm)
+        );
+    }
+
+    // Filtre par type
+    if (params['type']) {
+        filtered = filtered.filter(customer =>
+            customer.type?.toLowerCase() === params['type']?.toLowerCase()
+        );
+    }
+
+    // Filtre par containerType
+    if (params['containerType']) {
+        filtered = filtered.filter(customer =>
+            customer.containerType?.toLowerCase() === params['containerType']?.toLowerCase()
+        );
+    }
+
+    // Filtre par priority
+    if (params['priority']) {
+        filtered = filtered.filter(customer =>
+            customer.priority?.toLowerCase() === params['priority']?.toLowerCase()
+        );
+    }
+
+    // Filtre par status
+    if (params['status']) {
+        filtered = filtered.filter(customer =>
+            customer.status?.toLowerCase() === params['status']?.toLowerCase()
+        );
+    }
+
+    // Support de l'ancien paramètre 'search' pour compatibilité
+    if (params['search']) {
+        const searchTerm = params['search'].toLowerCase();
+        const sortField = (params['sortField'] ?? 'name') as keyof Customer;
+        filtered = filtered.filter(customer => {
+            const value = customer[sortField];
+            if (typeof value === 'string') {
+                return value.toLowerCase().includes(searchTerm);
             }
+            return false;
         });
     }
 
-    customers.sort((a, b) => {
+    // TRI
+    const sortField = (params['sortField'] ?? 'name') as keyof Customer;
+    const sortDirection = (params['sortDirection'] ?? 'asc') as SortDirection;
+
+    filtered.sort((a, b) => {
         let aValue: any;
         let bValue: any;
 
@@ -44,12 +88,12 @@ export const filterAndSortCustomers = (customers: Customer[], params: SearchPara
                 bValue = b.name?.toLowerCase() || '';
                 break;
             case 'type':
-                aValue = typeOrder[a.priority?.toLowerCase() || ''] || 999;
-                bValue = typeOrder[b.priority?.toLowerCase() || ''] || 999;
+                aValue = typeOrder[a.type?.toLowerCase() || ''] || 999;
+                bValue = typeOrder[b.type?.toLowerCase() || ''] || 999;
                 break;
             case 'containerType':
-                aValue = containerTypeOrder[a.priority?.toLowerCase() || ''] || 999;
-                bValue = containerTypeOrder[b.priority?.toLowerCase() || ''] || 999;
+                aValue = containerTypeOrder[a.containerType?.toLowerCase() || ''] || 999;
+                bValue = containerTypeOrder[b.containerType?.toLowerCase() || ''] || 999;
                 break;
             case 'priority':
                 aValue = priorityOrder[a.priority?.toLowerCase() || ''] || 999;
@@ -79,5 +123,5 @@ export const filterAndSortCustomers = (customers: Customer[], params: SearchPara
         return 0;
     });
 
-    return customers;
+    return filtered;
 };

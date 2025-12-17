@@ -8,9 +8,9 @@ export const load = async ({fetch, params}) => {
             throw new Error('Échec de la requête');
         }
 
-        const customer = await res.json();
+        const data = await res.json();
 
-        return {customer};
+        return {customer: data.customer};
     } catch (err) {
         console.error('[LOAD] Error loading: customer/' + params.id, err);
         throw redirect(303, '/customers');

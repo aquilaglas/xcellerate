@@ -1,16 +1,38 @@
 <script lang="ts">
     import SortButtons from "$lib/components/ux/SortButtons.svelte";
-    import SearchBar from "$lib/components/ux/forms/SearchBar.svelte";
-    import type {SearchParams} from "$lib/types/filter-sort.types.js";
+    import CustomerFilters from "$lib/components/ux/CustomerFilters.svelte";
 
     type Props = {
-        searchParams: SearchParams;
+        nameFilter: string;
+        typeFilter: string;
+        containerTypeFilter: string;
+        priorityFilter: string;
+        statusFilter: string;
+        sortField: string;
+        sortDirection: 'asc' | 'desc';
     };
 
     let {
-        searchParams,
+        nameFilter = $bindable(),
+        typeFilter = $bindable(),
+        containerTypeFilter = $bindable(),
+        priorityFilter = $bindable(),
+        statusFilter = $bindable(),
+        sortField = $bindable(),
+        sortDirection = $bindable()
     }: Props = $props();
 </script>
 
-<SearchBar {searchParams}/>
-<SortButtons {searchParams}/>
+<div class="flex flex-col gap-4">
+    <CustomerFilters
+        bind:nameFilter
+        bind:typeFilter
+        bind:containerTypeFilter
+        bind:priorityFilter
+        bind:statusFilter
+    />
+    <SortButtons
+        bind:sortField
+        bind:sortDirection
+    />
+</div>

@@ -5,16 +5,13 @@
     import {onMount} from "svelte";
     import Selector from "$lib/components/ux/Selector.svelte";
     import Loader from "$lib/components/ui/Loader.svelte";
-    import type {SearchParams} from "$lib/types/filter-sort.types.js";
-    import {goToCustomers} from "$lib/utils/navigation.utils.js";
 
     type Props = {
         loading?: boolean;
         buttons?: {
             createCustomer?: boolean;
             sheetSelector?: {
-                searchParams: SearchParams,
-                sheetNames: string[];
+                sheetOptions: {value: string, label: string}[];
                 selectedSheet: string;
             };
         },
@@ -24,8 +21,7 @@
     const {loading = $bindable(false), buttons = $bindable({
         createCustomer: false,
         sheetSelector: {
-            searchParams: {},
-            sheetNames: [],
+            sheetOptions: [],
             selectedSheet: ''
         }
     }), children}: Props = $props();
@@ -38,6 +34,10 @@
     function setHeaderVar() {
         const h = headerEl?.getBoundingClientRect().height ?? 0;
         document.documentElement.style.setProperty('--header-h', `${h}px`);
+    }
+
+    function getSelectedSheetName(): string {
+        return buttons.sheetSelector?.sheetOptions.find(sheet => sheet.value === buttons.sheetSelector?.selectedSheet)?.label ?? '';
     }
 
     onMount(() => {
@@ -55,10 +55,7 @@
 
     $effect(() => {
         if (selectedSheet !== '' && selectedSheet !== buttons?.sheetSelector?.selectedSheet) {
-            const searchParams = buttons.sheetSelector?.searchParams || {};
-            searchParams['sheet'] = selectedSheet;
-            goToCustomers(buttons.sheetSelector?.searchParams);
-            window.location.reload();
+            goto(`/customers?sheet=${selectedSheet}`);
         }
     })
 </script>
@@ -74,20 +71,20 @@
             <h1 class="uppercase text-4xl text-green-50 dark:text-gray-900 font-bold">xcellerate</h1>
         </div>
         <div class="flex gap-2">
-            {#if buttons?.sheetSelector}
+            {#if buttons?.sheetSelector && buttons?.sheetSelector.sheetOptions.length > 0}
                 <Selector
                         bind:this={refSelector}
-                        options={buttons.sheetSelector.sheetNames}
-                        bind:value={selectedSheet}
+                        options={buttons.sheetSelector.sheetOptions}
+                        bind:selectedValue={selectedSheet}
                         bind:isOpen={isOpen}
                 >
                     <button
                             class="clickable-card flex flex-row py-2"
                             type="button"
                             onclick={refSelector.toggleDropdown}
-                            title={buttons.sheetSelector.selectedSheet}
+                            title={getSelectedSheetName()}
                     >
-                        <span class="hidden sm:block font-bold uppercase">{buttons.sheetSelector.selectedSheet.toLowerCase()}</span>
+                        <span class="hidden sm:block font-bold uppercase">{getSelectedSheetName().toLowerCase()}</span>
                         {#if isOpen}
                             <CircleArrowUp class="ml-2 size-6"/>
                         {:else}
