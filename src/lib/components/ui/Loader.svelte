@@ -1,9 +1,9 @@
 <script lang="ts">
-    let {active}: { active: boolean } = $props();
+    let {active, respectHeader = false}: { active: boolean, respectHeader?: boolean } = $props();
 </script>
 
 {#if active}
-    <div class="loader-overlay">
+    <div class="loader-overlay" class:respect-header={respectHeader}>
         <div class="spinner"></div>
     </div>
 {/if}
@@ -21,11 +21,15 @@
         cursor: progress;
     }
 
+    .loader-overlay.respect-header {
+        top: calc(env(safe-area-inset-top) + var(--header-h, 0px));
+    }
+
     .spinner {
-        width: 40px;
-        height: 40px;
-        border: 4px solid transparent;
-        border-top-color: #3b82f6;
+        width: 160px;
+        height: 160px;
+        border: 16px solid transparent;
+        border-top-color: #15803d;
         border-radius: 50%;
         animation: spin 0.8s linear infinite;
     }

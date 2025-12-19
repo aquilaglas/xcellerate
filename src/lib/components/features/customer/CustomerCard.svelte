@@ -1,10 +1,10 @@
 <script lang="ts">
-    import SelectorBadge from "$lib/components/ux/SelectorBadge.svelte";
     import type {Customer} from "$lib/types/models.js";
     import {TypeColorMap, TypeEnum} from "$lib/enums/type.enum.js";
     import {ContainerTypeColorMap, ContainerTypeEnum} from "$lib/enums/container-type.enum.js";
     import {PriorityColorMap, PriorityEnum} from "$lib/enums/priority.enum.js";
     import {StatusColorMap, StatusEnum} from "$lib/enums/status.enum.js";
+    import Selector from "$lib/components/ux/Selector.svelte";
 
     type Props = {
         customer: Customer;
@@ -20,14 +20,18 @@
     <div class="mb-2">
         <span class="text-gray-500 dark:text-gray-300 text-lg">{customer.lastCommunication ?? '?'}</span>
         <div class="flex flex-wrap gap-2">
-            <SelectorBadge options={Object.values(TypeEnum)} colors={TypeColorMap}
-                           value={customer.type} title="Type" disabled={true}/>
-            <SelectorBadge options={Object.values(ContainerTypeEnum)} colors={ContainerTypeColorMap}
-                           value={customer.containerType} title="Type de contenant" disabled={true}/>
-            <SelectorBadge options={Object.values(PriorityEnum)} colors={PriorityColorMap}
-                           value={customer.priority} title="Priorité" disabled={true}/>
-            <SelectorBadge options={Object.values(StatusEnum)} colors={StatusColorMap}
-                           value={customer.status} title="Statut" disabled={true}/>
+            <Selector options={Object.values(TypeEnum).map(value => ({label: value, value: value}))}
+                      colors={TypeColorMap} value={customer.type} title="Type" disabled={true}
+                      buttonClass="flex items-center rounded-4xl py-1 px-2 text-green-50 text-xs"/>
+            <Selector options={Object.values(ContainerTypeEnum).map(value => ({label: value, value: value}))}
+                      colors={ContainerTypeColorMap} value={customer.containerType} title="Type de contenant" disabled={true}
+                      buttonClass="flex items-center rounded-4xl py-1 px-2 text-green-50 text-xs"/>
+            <Selector options={Object.values(PriorityEnum).map(value => ({label: value, value: value}))}
+                      colors={PriorityColorMap} value={customer.priority} title="Priorité" disabled={true}
+                      buttonClass="flex items-center rounded-4xl py-1 px-2 text-green-50 text-xs"/>
+            <Selector options={Object.values(StatusEnum).map(value => ({label: value, value: value}))}
+                      colors={StatusColorMap} value={customer.status} title="Statut" disabled={true}
+                      buttonClass="flex items-center rounded-4xl py-1 px-2 text-green-50 text-xs"/>
         </div>
     </div>
 

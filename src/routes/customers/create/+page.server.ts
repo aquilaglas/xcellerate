@@ -1,22 +1,18 @@
 import {createDefaultCustomer} from "$lib/utils/customer.utils.js";
-import {redirect} from "@sveltejs/kit";
+import { error, redirect } from "@sveltejs/kit";
 
 export const load = async ({ fetch }) => {
-    try {
-        const res = await fetch(
-            '/api/customers',
-            { method: 'POST', body: JSON.stringify(createDefaultCustomer())}
-        );
+    const res = await fetch(
+        '/api/customers',
+        { method: 'POST', body: JSON.stringify(createDefaultCustomer())}
+    );
 
-        if (!res.ok) {
-            throw new Error('Échec de la requête');
-        }
-
-        const data = await res.json();
-
-        throw redirect(303, '/customers/' +  data.customer.id);
-    } catch (err) {
-        console.error('[LOAD] Error failed to create customer', err);
-        throw redirect(303, '/customers');
+    if (!res.ok) {
+        console.error('[LOAD] Error failed to create customer', res.status);
+        throw error(res.status, 'Échec de la création du client');
     }
+
+    const data = await res.json();
+
+    throw redirect(303, '/customers/' +  data.customer.id);
 };

@@ -1,12 +1,12 @@
 <script lang="ts">
     // @ts-ignore
     import { X } from "lucide-svelte";
-    import SelectorBadge from "./SelectorBadge.svelte";
     import { translate } from "$lib/utils/translator.utils.js";
-    import { TypeEnum, TypeColorMap } from "$lib/enums/type.enum.js";
-    import { ContainerTypeEnum, ContainerTypeColorMap } from "$lib/enums/container-type.enum.js";
-    import { PriorityEnum, PriorityColorMap } from "$lib/enums/priority.enum.js";
-    import { StatusEnum, StatusColorMap } from "$lib/enums/status.enum.js";
+    import { TypeEnum } from "$lib/enums/type.enum.js";
+    import { ContainerTypeEnum } from "$lib/enums/container-type.enum.js";
+    import { PriorityEnum } from "$lib/enums/priority.enum.js";
+    import { StatusEnum } from "$lib/enums/status.enum.js";
+    import Selector from "$lib/components/ux/Selector.svelte";
 
     type Props = {
         nameFilter: string;
@@ -32,14 +32,13 @@
         statusFilter = '';
     }
 
-    // Compter le nombre de filtres actifs
     const activeFiltersCount = $derived(
         [nameFilter, typeFilter, containerTypeFilter, priorityFilter, statusFilter]
             .filter(f => f && f !== '').length
     );
 </script>
 
-<div class="flex flex-col gap-3 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
+<div class="flex flex-col gap-3 border-b border-gray-300 pb-4">
     <div class="flex items-center justify-between">
         <h3 class="text-lg font-semibold">
             Filtres
@@ -63,52 +62,35 @@
     </div>
 
     <div class="flex flex-wrap gap-2">
-        <!-- Filtre nom (texte) -->
         <input
             type="text"
             placeholder="Rechercher par {translate('name')}"
             bind:value={nameFilter}
             class="input flex-1 min-w-[200px]"
         />
-
-        <!-- Filtre type -->
-        <SelectorBadge
-            options={Object.values(TypeEnum)}
-            colors={TypeColorMap}
+        <Selector
+            options={Object.values(TypeEnum).map(value => ({label: value, value: value}))}
             bind:value={typeFilter}
-            title={translate('type')}
-            allowEmpty={true}
-            emptyLabel="Tous types"
+            emptyLabel="tous les types"
+            buttonClass="btn-secondary py-2"
         />
-
-        <!-- Filtre containerType -->
-        <SelectorBadge
-            options={Object.values(ContainerTypeEnum)}
-            colors={ContainerTypeColorMap}
+        <Selector
+            options={Object.values(ContainerTypeEnum).map(value => ({label: value, value: value}))}
             bind:value={containerTypeFilter}
-            title={translate('containerType')}
-            allowEmpty={true}
-            emptyLabel="Tous"
+            emptyLabel="tous les contenants"
+            buttonClass="btn-secondary py-2"
         />
-
-        <!-- Filtre priority -->
-        <SelectorBadge
-            options={Object.values(PriorityEnum)}
-            colors={PriorityColorMap}
+        <Selector
+            options={Object.values(PriorityEnum).map(value => ({label: value, value: value}))}
             bind:value={priorityFilter}
-            title={translate('priority')}
-            allowEmpty={true}
-            emptyLabel="Toutes"
+            emptyLabel="toutes les priorités"
+            buttonClass="btn-secondary py-2"
         />
-
-        <!-- Filtre status -->
-        <SelectorBadge
-            options={Object.values(StatusEnum)}
-            colors={StatusColorMap}
+        <Selector
+            options={Object.values(StatusEnum).map(value => ({label: value, value: value}))}
             bind:value={statusFilter}
-            title={translate('status')}
-            allowEmpty={true}
-            emptyLabel="Tous"
+            emptyLabel="tous les statuts"
+            buttonClass="btn-secondary py-2"
         />
     </div>
 </div>

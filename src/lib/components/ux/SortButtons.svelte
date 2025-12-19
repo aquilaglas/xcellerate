@@ -1,4 +1,5 @@
 <script lang="ts">
+    // @ts-ignore
     import {CircleArrowDown, CircleArrowUp} from "lucide-svelte";
     import {FilterSortEnum} from "$lib/enums/filter-sort.enum.js";
     import {translate} from "$lib/utils/translator.utils.js";
@@ -15,10 +16,8 @@
 
     function sort(field: string) {
         if (sortField === field) {
-            // Même champ : inverser la direction
             sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
         } else {
-            // Nouveau champ : définir à 'asc'
             sortField = field;
             sortDirection = 'asc';
         }
@@ -27,7 +26,7 @@
 
 <div class="flex flex-wrap gap-2">
     {#each Object.values(FilterSortEnum) as field}
-        <button type="button" class="btn-secondary py-2 " onclick={() => sort(field)}>
+        <button type="button" class="btn-secondary py-2" onclick={() => sort(field)}>
             <span class="text-xs">{translate(field)}</span>
             {#if sortField === field }
                 {#if sortDirection === 'desc'}

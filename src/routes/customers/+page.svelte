@@ -4,8 +4,9 @@
     import Modal from "$lib/components/ui/Modal.svelte";
     import CustomerCard from "$lib/components/features/customer/CustomerCard.svelte";
     import Header from "$lib/components/ui/Header.svelte";
-    import FilterSort from "$lib/components/ux/FilterSort.svelte";
     import {filterAndSortCustomers} from "$lib/utils/filter-sort.utils.js";
+    import CustomerFilters from "$lib/components/ux/CustomerFilters.svelte";
+    import SortButtons from "$lib/components/ux/SortButtons.svelte";
 
     const {data}: PageProps = $props();
 
@@ -40,15 +41,19 @@
         }}
 >
     <div class="flex flex-col gap-4 p-4">
-        <FilterSort
-            bind:nameFilter
-            bind:typeFilter
-            bind:containerTypeFilter
-            bind:priorityFilter
-            bind:statusFilter
-            bind:sortField
-            bind:sortDirection
-        />
+        <div class="flex flex-col gap-4">
+            <CustomerFilters
+                    bind:nameFilter
+                    bind:typeFilter
+                    bind:containerTypeFilter
+                    bind:priorityFilter
+                    bind:statusFilter
+            />
+            <SortButtons
+                    bind:sortField
+                    bind:sortDirection
+            />
+        </div>
         <h2 class="text-2xl font-bold text-green-700">
             {filteredCustomers.length} client{filteredCustomers.length > 1 ? 's' : ''}
             {#if filteredCustomers.length !== data.customers?.length}

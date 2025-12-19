@@ -2,7 +2,6 @@
     // @ts-ignore
     import {CirclePlus} from "lucide-svelte";
     import {deleteCustomer, updateCustomer} from "$lib/utils/customer.utils.js";
-    import SelectorBadge from "$lib/components/ux/SelectorBadge.svelte";
     import {onMount} from "svelte";
     import FormInputDefault from "$lib/components/ux/forms/FormInputDefault.svelte";
     import FormInputArray from "$lib/components/ux/forms/FormInputArray.svelte";
@@ -14,6 +13,7 @@
     import {StatusColorMap, StatusEnum} from "$lib/enums/status.enum.js";
     import type {Customer} from "$lib/types/models.js";
     import {goBackCustomers} from "$lib/utils/navigation.utils.js";
+    import Selector from "$lib/components/ux/Selector.svelte";
 
     type Props = {
         customer: Customer;
@@ -25,6 +25,7 @@
     let original = $state<Customer>(customer);
     let formData = $state<Customer>(customer);
     let showModal = $state(false);
+    let debounceTimer: number | null = null;
 
     async function onDelete() {
         showModal = false;
@@ -67,8 +68,24 @@
 
     $effect(() => {
         if (!isInitialized) return;
-        updateCustomer(getDiff(original, formData), customer.id).then(() => {
-        });
+
+        const diff = getDiff(original, formData);
+
+        // Vérifier s'il y a des modifications
+        if (Object.keys(diff).length === 0) return;
+
+        // Annuler le timer précédent s'il existe
+        if (debounceTimer !== null) {
+            clearTimeout(debounceTimer);
+        }
+
+        // Créer un nouveau timer de 1 seconde
+        debounceTimer = setTimeout(() => {
+            updateCustomer(diff, customer.id).then(() => {
+                // Mettre à jour l'original après la sauvegarde réussie
+                original = JSON.parse(JSON.stringify(formData));
+            });
+        }, 1000) as unknown as number;
     });
 </script>
 
@@ -97,23 +114,27 @@
             <div class="card flex-row flex-wrap gap-2 sm:gap-0">
                 <div class="flex gap-2 sm:pr-2 sm:border-r-2 border-gray-900 dark:border-green-50">
                     <span class="hidden md:block">Type:</span>
-                    <SelectorBadge options={Object.values(TypeEnum)} colors={TypeColorMap}
-                                   bind:value={formData.type} title="Type"/>
+                    <Selector options={Object.values(TypeEnum).map(value => ({label: value, value: value}))}
+                              colors={TypeColorMap} bind:value={formData.type} title="Type"
+                              buttonClass="flex items-center rounded-4xl py-1 px-2 text-green-50 text-xs"/>
                 </div>
                 <div class="flex gap-2 sm:px-2 sm:border-r-2 border-gray-900 dark:border-green-50">
                     <span class="hidden md:block">Type de contenant:</span>
-                    <SelectorBadge options={Object.values(ContainerTypeEnum)} colors={ContainerTypeColorMap}
-                                   bind:value={formData.containerType} title="Type de contenant"/>
+                    <Selector options={Object.values(ContainerTypeEnum).map(value => ({label: value, value: value}))}
+                              colors={ContainerTypeColorMap} bind:value={formData.containerType} title="Type de contenant"
+                              buttonClass="flex items-center rounded-4xl py-1 px-2 text-green-50 text-xs"/>
                 </div>
                 <div class="flex gap-2 sm:px-2 sm:border-r-2 border-gray-900 dark:border-green-50">
                     <span class="hidden md:block">Priorité:</span>
-                    <SelectorBadge options={Object.values(PriorityEnum)} colors={PriorityColorMap}
-                                   bind:value={formData.priority} title="Priorité"/>
+                    <Selector options={Object.values(PriorityEnum).map(value => ({label: value, value: value}))}
+                              colors={PriorityColorMap} bind:value={formData.priority} title="Priorité"
+                              buttonClass="flex items-center rounded-4xl py-1 px-2 text-green-50 text-xs"/>
                 </div>
                 <div class="flex gap-2 sm:pl-2">
                     <span class="hidden md:block">Statut:</span>
-                    <SelectorBadge options={Object.values(StatusEnum)} colors={StatusColorMap}
-                                   bind:value={formData.status} title="Statut"/>
+                    <Selector options={Object.values(StatusEnum).map(value => ({label: value, value: value}))}
+                              colors={StatusColorMap} bind:value={formData.status} title="Statut"
+                              buttonClass="flex items-center rounded-4xl py-1 px-2 text-green-50 text-xs"/>
                 </div>
             </div>
 

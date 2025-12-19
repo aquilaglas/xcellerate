@@ -1,6 +1,6 @@
 <script lang="ts">
     // @ts-ignore
-    import {CircleArrowDown, CircleArrowUp, CirclePlus, Grid2x2Check} from "lucide-svelte";
+    import {CirclePlus, Grid2x2Check} from "lucide-svelte";
     import {goto} from "$app/navigation";
     import {onMount} from "svelte";
     import Selector from "$lib/components/ux/Selector.svelte";
@@ -28,16 +28,10 @@
 
     let headerEl: HTMLElement;
     let selectedSheet: string = $state(buttons?.sheetSelector ? buttons.sheetSelector.selectedSheet : '');
-    let isOpen = $state(false);
-    let refSelector: Selector | undefined = $state();
 
     function setHeaderVar() {
         const h = headerEl?.getBoundingClientRect().height ?? 0;
         document.documentElement.style.setProperty('--header-h', `${h}px`);
-    }
-
-    function getSelectedSheetName(): string {
-        return buttons.sheetSelector?.sheetOptions.find(sheet => sheet.value === buttons.sheetSelector?.selectedSheet)?.label ?? '';
     }
 
     onMount(() => {
@@ -52,12 +46,6 @@
             window.removeEventListener('resize', setHeaderVar);
         };
     });
-
-    $effect(() => {
-        if (selectedSheet !== '' && selectedSheet !== buttons?.sheetSelector?.selectedSheet) {
-            goto(`/customers?sheet=${selectedSheet}`);
-        }
-    })
 </script>
 
 <header
@@ -73,25 +61,11 @@
         <div class="flex gap-2">
             {#if buttons?.sheetSelector && buttons?.sheetSelector.sheetOptions.length > 0}
                 <Selector
-                        bind:this={refSelector}
                         options={buttons.sheetSelector.sheetOptions}
-                        bind:selectedValue={selectedSheet}
-                        bind:isOpen={isOpen}
-                >
-                    <button
-                            class="clickable-card flex flex-row py-2"
-                            type="button"
-                            onclick={refSelector.toggleDropdown}
-                            title={getSelectedSheetName()}
-                    >
-                        <span class="hidden sm:block font-bold uppercase">{getSelectedSheetName().toLowerCase()}</span>
-                        {#if isOpen}
-                            <CircleArrowUp class="ml-2 size-6"/>
-                        {:else}
-                            <CircleArrowDown class="ml-2 size-6"/>
-                        {/if}
-                    </button>
-                </Selector>
+                        bind:value={selectedSheet}
+                        onSelect={(value) => goto(`/customers?sheet=${value}`)}
+                        buttonClass="clickable-card flex flex-row py-2 uppercase font-bold"
+                />
             {/if}
             {#if buttons?.createCustomer}
                 <button type="button" class="clickable-card flex flex-row py-2"
