@@ -146,7 +146,7 @@
         </div>
 
         <h2 class="text-2xl font-bold mt-8 mb-2">Données secondaires</h2>
-        <div class="grid grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             {#if formData.otherData}
                 {#each Object.entries(formData.otherData) as [key, _]}
                     <label class="flex flex-col">

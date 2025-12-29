@@ -5,6 +5,7 @@
     import {PriorityColorMap, PriorityEnum} from "$lib/enums/priority.enum.js";
     import {StatusColorMap, StatusEnum} from "$lib/enums/status.enum.js";
     import Selector from "$lib/components/ux/Selector.svelte";
+    import {formatDateFr} from "$lib/utils/date.utils.js";
 
     type Props = {
         customer: Customer;
@@ -18,7 +19,7 @@
     <span class="text-4xl mb-4">{customer.name && customer.name !== '' ? customer.name : '?'}</span>
 
     <div class="mb-2">
-        <span class="text-gray-500 dark:text-gray-300 text-lg">{customer.lastCommunication ?? '?'}</span>
+        <span class="text-gray-500 dark:text-gray-300 text-lg">{formatDateFr(customer.lastCommunication)}</span>
         <div class="flex flex-wrap gap-2">
             <Selector options={Object.values(TypeEnum).map(value => ({label: value, value: value}))}
                       colors={TypeColorMap} value={customer.type} title="Type" disabled={true}

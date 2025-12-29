@@ -56,9 +56,13 @@ export function createDefaultCustomer(): CustomerCreateDTO {
 const FIELD_MAP: Record<string, keyof CustomerCreateDTO | "otherData"> = {
     "nom": "name",
     "name": "name",
+    "nom ": "name",
 
     "adresses": "addresses",
     "adresse": "addresses",
+    "adresse précise": "addresses",
+    "ville": "addresses",
+    "lieu": "addresses",
 
     "type": "type",
 
@@ -76,14 +80,18 @@ const FIELD_MAP: Record<string, keyof CustomerCreateDTO | "otherData"> = {
     "commentaires": "comments",
 
     "contact": "contacts",
-    "contacts": "contacts"
+    "contacts": "contacts",
+    "nom des contacts": "contacts",
+    "contact mail": "contacts",
+    "contact téléphone": "contacts"
 };
 
 export function formatCustomer(row: Record<string, any>): CustomerCreateDTO {
     const customer = createDefaultCustomer();
 
     for (const [rawKey, value] of Object.entries(row)) {
-        const key = rawKey.trim().toLowerCase();
+        // Normaliser la clé : trim, lowercase, et remplacer les retours à la ligne/espaces multiples par un espace
+        const key = rawKey.trim().toLowerCase().replace(/\s+/g, ' ');
         const mappedField = FIELD_MAP[key];
 
         if (!mappedField) {
@@ -104,10 +112,27 @@ export function formatCustomer(row: Record<string, any>): CustomerCreateDTO {
 
             case "lastCommunication":
                 if (typeof value === 'number') {
-                    const jsDate = new Date((value - 25569) * 86400 * 1000);
-                    customer.lastCommunication = jsDate.toISOString();
+                    try {
+                        const jsDate = new Date((value - 25569) * 86400 * 1000);
+                        if (!isNaN(jsDate.getTime())) {
+                            customer.lastCommunication = jsDate.toISOString();
+                        } else {
+                            customer.lastCommunication = null;
+                        }
+                    } catch {
+                        customer.lastCommunication = null;
+                    }
                 } else if (typeof value === 'string' && value.trim() !== '') {
-                    customer.lastCommunication = new Date(value).toISOString();
+                    try {
+                        const date = new Date(value);
+                        if (!isNaN(date.getTime())) {
+                            customer.lastCommunication = date.toISOString();
+                        } else {
+                            customer.lastCommunication = null;
+                        }
+                    } catch {
+                        customer.lastCommunication = null;
+                    }
                 } else {
                     customer.lastCommunication = null;
                 }

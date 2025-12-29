@@ -25,7 +25,7 @@
     }: Props = $props();
 
 
-    const filteredOptions = options.filter((o) => o.value !== value);
+    const filteredOptions = $derived(options.filter((o) => o.value !== value));
     const selectedLabel = $derived(options.find(o => o.value === value)?.label || null);
 
     const displayColor = $derived(

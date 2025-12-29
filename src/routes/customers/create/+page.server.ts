@@ -1,9 +1,12 @@
 import {createDefaultCustomer} from "$lib/utils/customer.utils.js";
 import { error, redirect } from "@sveltejs/kit";
+import type {SearchParams} from "$lib/types/filter-sort.types.js";
 
-export const load = async ({ fetch }) => {
+export const load = async ({ fetch, url }) => {
+    const params: SearchParams = Object.fromEntries(url.searchParams.entries());
+
     const res = await fetch(
-        '/api/customers',
+        `/api/sheets/${params.sheet}/customers`,
         { method: 'POST', body: JSON.stringify(createDefaultCustomer())}
     );
 

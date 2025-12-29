@@ -53,7 +53,7 @@
         style="padding-top: calc(env(safe-area-inset-top) + calc(var(--spacing) * 2));"
         class="fixed flex flex-col gap-2 inset-x-0 top-0 z-50 p-2"
 >
-    <div class="flex gap-4 items-center justify-between">
+    <div class="flex gap-4 items-center justify-between flex-wrap">
         <div class="flex items-center gap-2">
             <Grid2x2Check class="text-green-50 dark:text-gray-900 size-10"/>
             <h1 class="uppercase text-4xl text-green-50 dark:text-gray-900 font-bold">xcellerate</h1>
@@ -69,7 +69,7 @@
             {/if}
             {#if buttons?.createCustomer}
                 <button type="button" class="clickable-card flex flex-row py-2"
-                        onclick={() => goto('/customers/create')}>
+                        onclick={() => goto('/customers/create?sheet=' + buttons.sheetSelector?.selectedSheet)}>
                     <span class="hidden sm:block font-bold">Ajouter un client</span>
                     <CirclePlus class="block sm:hidden size-6"/>
                 </button>

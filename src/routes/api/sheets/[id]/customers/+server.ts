@@ -24,7 +24,8 @@ export const GET: RequestHandler = async ({ params, locals }) => {
             .from('customers')
             .select('*', { count: 'exact' })
             .in('id', sheetData.customer_ids)
-            .eq('user_id', locals.user.id);
+            .eq('user_id', locals.user.id)
+            .limit(10000);
 
         if (error) {
             return json({ error: error.message }, { status: 400 });
@@ -71,26 +72,16 @@ export const POST: RequestHandler = async ({ locals, params, request }) => {
             return json({ error: customerError.message }, { status: 400 });
         }
 
-        const { data: sheet, error: sheetError } = await locals.supabase
-            .from('sheets')
-            .select('customer_ids')
-            .eq('id', sheetId)
-            .eq('user_id', locals.user.id)
-            .single();
+        // Utiliser la fonction PostgreSQL atomique pour éviter les race conditions
+        const { error: rpcError } = await locals.supabase
+            .rpc('add_customer_to_sheet', {
+                p_sheet_id: sheetId,
+                p_customer_id: customer.id,
+                p_user_id: locals.user.id
+            });
 
-        if (sheetError || !sheet) {
-            return json({ error: 'Sheet not found or unauthorized' }, { status: 404 });
-        }
-
-        const updatedIds = Array.from(new Set([...(sheet.customer_ids || []), customer.id]));
-
-        const { error: updateError } = await locals.supabase
-            .from('sheets')
-            .update({ customer_ids: updatedIds })
-            .eq('id', sheetId);
-
-        if (updateError) {
-            return json({ error: updateError.message }, { status: 400 });
+        if (rpcError) {
+            return json({ error: rpcError.message }, { status: 400 });
         }
 
         return json({
