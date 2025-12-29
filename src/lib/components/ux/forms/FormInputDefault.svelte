@@ -11,5 +11,5 @@
 
 <label class="card">
     <span>{title}</span>
-    <InputAutoResize bind:value class="input" placeholder="Ajouter: {title}"/>
+    <InputAutoResize bind:value placeholder="Ajouter: {title}"/>
 </label>

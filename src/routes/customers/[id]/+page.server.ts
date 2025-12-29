@@ -1,18 +1,14 @@
-import {redirect} from "@sveltejs/kit";
+import { error } from '@sveltejs/kit';
 
 export const load = async ({fetch, params}) => {
-    try {
-        const res = await fetch('/api/customers/' + params.id);
+    const res = await fetch('/api/customers/' + params.id);
 
-        if (!res.ok) {
-            throw new Error('Échec de la requête');
-        }
-
-        const customer = await res.json();
-
-        return {customer};
-    } catch (err) {
-        console.error('Erreur dans load:', err);
-        throw redirect(303, '/customers');
+    if (!res.ok) {
+        console.error('[LOAD] Error loading: customer/' + params.id, res.status);
+        throw error(res.status, 'Échec du chargement du client');
     }
+
+    const data = await res.json();
+
+    return {customer: data.customer};
 };

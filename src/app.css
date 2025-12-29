@@ -20,16 +20,16 @@
 @layer components {
     .btn-primary {
         @apply text-green-50 bg-green-700 hover:bg-green-800 active:bg-green-800
-        font-bold uppercase flex gap-2 items-center justify-center rounded-md p-2;
+        font-medium uppercase flex gap-2 items-center justify-center rounded-md p-2;
     }
     .btn-secondary {
         @apply text-gray-900 bg-gray-300 hover:bg-gray-200 active:bg-gray-200
         dark:text-green-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:active:bg-gray-700
-        font-bold uppercase flex gap-2 items-center justify-center rounded-md p-2;
+        font-medium flex gap-2 items-center justify-center rounded-md p-2;
     }
     .btn-danger {
         @apply text-green-50 bg-red-500 hover:bg-red-700 active:bg-red-700
-        font-bold uppercase flex gap-2 items-center justify-center rounded-md p-2;
+        font-medium uppercase flex gap-2 items-center justify-center rounded-md p-2;
     }
     .btn-link {
         @apply text-gray-900 hover:text-gray-700 active:text-gray-700
@@ -43,7 +43,7 @@
     .card {
         @apply text-gray-900 bg-white
         dark:text-green-50 dark:bg-gray-800
-        flex flex-col text-left font-medium shadow-lg rounded-lg p-4;
+        flex flex-col text-left font-normal shadow-lg rounded-lg p-4;
     }
     .input {
         @apply border-1 text-black bg-white border-gray-300
