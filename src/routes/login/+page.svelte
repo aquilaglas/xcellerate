@@ -26,7 +26,6 @@
 
             if (!res.ok) {
                 errorMessage = data.error || 'Erreur lors de la connexion.';
-                errorMessage = 'Erreur lors de la connexion.';
             } else {
                 successMessage = data.message || 'Connexion réussie !';
                 await goto('/');

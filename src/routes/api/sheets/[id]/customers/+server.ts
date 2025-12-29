@@ -54,7 +54,7 @@ export const POST: RequestHandler = async ({ locals, params, request }) => {
             .from('customers')
             .insert({
                 user_id: locals.user.id,
-                name: body.name || '?',
+                name: body.name || '',
                 addresses: body.addresses || [],
                 type: body.type || 'standard',
                 contacts: body.contacts || [],
@@ -72,7 +72,6 @@ export const POST: RequestHandler = async ({ locals, params, request }) => {
             return json({ error: customerError.message }, { status: 400 });
         }
 
-        // Utiliser la fonction PostgreSQL atomique pour éviter les race conditions
         const { error: rpcError } = await locals.supabase
             .rpc('add_customer_to_sheet', {
                 p_sheet_id: sheetId,

@@ -37,7 +37,6 @@
 
             if (!res.ok) {
                 errorMessage = data.error || 'Erreur lors de l’inscription.';
-                errorMessage = 'Erreur lors de l’inscription.';
             } else {
                 successMessage = data.message || 'Inscription réussie !';
                 await goto('/login');

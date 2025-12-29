@@ -9,7 +9,6 @@
 
     type Props = {
         customer: Customer;
-        renderers?: Record<string, any>;
     };
 
     const {customer}: Props = $props();
