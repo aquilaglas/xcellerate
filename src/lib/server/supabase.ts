@@ -1,6 +1,5 @@
 import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
-import { SUPABASE_SERVICE_ROLE_KEY } from '$env/static/private';
-import { NODE_ENV } from '$env/static/private';
+import { SUPABASE_SERVICE_ROLE_KEY, APP_ENV } from '$env/static/private';
 import {createClient} from '@supabase/supabase-js';
 
 export const supabaseAdmin = createClient(
@@ -31,7 +30,7 @@ export function setAuthCookies(cookies: any, access_token: any, refresh_token: a
         path: '/',
         httpOnly: true,
         sameSite: 'lax',
-        secure: NODE_ENV === 'production',
+        secure: APP_ENV === 'production',
         maxAge: 60 * 60 * 24 * 7
     });
 
@@ -39,7 +38,7 @@ export function setAuthCookies(cookies: any, access_token: any, refresh_token: a
         path: '/',
         httpOnly: true,
         sameSite: 'lax',
-        secure: NODE_ENV === 'production',
+        secure: APP_ENV === 'production',
         maxAge: 60 * 60 * 24 * 30
     });
 }
@@ -47,10 +46,10 @@ export function setAuthCookies(cookies: any, access_token: any, refresh_token: a
 export function clearAuthCookies(cookies: any) {
     cookies.delete('sb-access-token', {
         path: '/',
-        secure: NODE_ENV === 'production'
+        secure: APP_ENV === 'production'
     });
     cookies.delete('sb-refresh-token', {
         path: '/',
-        secure: NODE_ENV === 'production'
+        secure: APP_ENV === 'production'
     });
 }
