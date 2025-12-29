@@ -71,18 +71,13 @@
 
         const diff = getDiff(original, formData);
 
-        // Vérifier s'il y a des modifications
         if (Object.keys(diff).length === 0) return;
-
-        // Annuler le timer précédent s'il existe
         if (debounceTimer !== null) {
             clearTimeout(debounceTimer);
         }
 
-        // Créer un nouveau timer de 1 seconde
         debounceTimer = setTimeout(() => {
             updateCustomer(diff, customer.id).then(() => {
-                // Mettre à jour l'original après la sauvegarde réussie
                 original = JSON.parse(JSON.stringify(formData));
             });
         }, 1000) as unknown as number;
