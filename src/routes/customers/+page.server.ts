@@ -17,6 +17,10 @@ export const load: PageServerLoad = async (
     const sheetsData = await sheetsRes.json();
     const sheetOptions = sheetsData.sheets.map((s: Sheet) => ({label: s.name, value: s.id})) ?? [];
 
+    if (!params.sheet) {
+        params['sheet'] = sheetOptions[0].value;
+    }
+
     const customersRes = await fetch(`/api/sheets/${params.sheet}/customers`);
     if (!customersRes.ok) {
         console.error('[LOAD] Failed to fetch sheet customers', customersRes.status, await customersRes.text());

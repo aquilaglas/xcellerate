@@ -103,10 +103,17 @@ export async function importXlsData(event: Event): Promise<ImportResult> {
     return result;
 }
 
-export const exportXlsData = async (sheets: Array<{label: string, value: string}>) => {
+export type ExportResult = {
+    success: boolean;
+    message?: string;
+};
+
+export const exportXlsData = async (sheets: Array<{label: string, value: string}>): Promise<ExportResult> => {
     const workbook = new ExcelJS.Workbook();
     const now = new Date();
     const timestamp = `${String(now.getDate()).padStart(2, '0')}-${String(now.getMonth() + 1).padStart(2, '0')}-${now.getFullYear()}`;
+
+    let hasAtLeastOneSheet = false;
 
     for (const sheet of sheets) {
         try {
@@ -123,6 +130,8 @@ export const exportXlsData = async (sheets: Array<{label: string, value: string}
                 console.warn(`Aucun customer trouvé pour ${sheet.label}`);
                 continue;
             }
+
+            hasAtLeastOneSheet = true;
 
             const customersData = customers.map(customer => {
                 let formattedDate = '';
@@ -186,12 +195,32 @@ export const exportXlsData = async (sheets: Array<{label: string, value: string}
         }
     }
 
-    const buffer = await workbook.xlsx.writeBuffer();
-    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `CLIENTS_${timestamp}.xlsx`;
-    link.click();
-    window.URL.revokeObjectURL(url);
+    if (!hasAtLeastOneSheet) {
+        return {
+            success: false,
+            message: "Aucune donnée à exporter"
+        };
+    }
+
+    try {
+        const buffer = await workbook.xlsx.writeBuffer();
+        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `CLIENTS_${timestamp}.xlsx`;
+        link.click();
+        window.URL.revokeObjectURL(url);
+
+        return {
+            success: true,
+            message: "Fichier Excel généré avec succès"
+        };
+    } catch (error) {
+        console.error("Erreur lors de la génération du fichier:", error);
+        return {
+            success: false,
+            message: `Erreur lors de la génération du fichier: ${error}`
+        };
+    }
 }

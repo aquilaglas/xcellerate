@@ -1,4 +1,6 @@
 <script lang="ts">
+    //@ts-ignore
+    import {Download} from "lucide-svelte";
     import type {PageProps} from './$types.js';
     import {goto} from "$app/navigation";
     import Modal from "$lib/components/ui/Modal.svelte";
@@ -7,8 +9,8 @@
     import {filterAndSortCustomers} from "$lib/utils/filter-sort.utils.js";
     import CustomerFilters from "$lib/components/ux/CustomerFilters.svelte";
     import SortButtons from "$lib/components/ux/SortButtons.svelte";
-    import {Download} from "lucide-svelte";
     import {exportXlsData} from "$lib/utils/xls.utils.js";
+    import {setLoading} from "$lib/stores/loader.store.js";
 
     const {data}: PageProps = $props();
 
@@ -19,6 +21,8 @@
     let statusFilter = $state('');
     let sortField = $state('name');
     let sortDirection = $state<'asc' | 'desc'>('asc');
+    let showExportModal = $state(false);
+    let exportModalError = $state('');
 
     const filteredCustomers = $derived(
         filterAndSortCustomers(data.customers ?? [], {
@@ -31,6 +35,35 @@
             sortDirection: sortDirection
         })
     );
+
+    async function handleClick() {
+        exportModalError = '';
+        setLoading(true);
+        try {
+            const result = await exportXlsData(data.sheetOptions);
+            if (!result.success) {
+                exportModalError = result.message || 'erreur inconnue';
+            }
+            showExportModal = true;
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    async function onCleanUp() {
+        setLoading(true);
+        try {
+            await fetch('/api/cleanup/', {
+                method: 'DELETE',
+                credentials: "include",
+                headers: {'Content-Type': 'application/json'},
+            });
+            goto('/');
+        } finally {
+            setLoading(false);
+            showExportModal = false;
+        }
+    }
 </script>
 
 <Header
@@ -85,7 +118,37 @@
     {/if}
 
     <button class="btn-primary fixed bottom-0 right-0 h-fit z-50 m-2"
-            onclick={async () => await exportXlsData(data.sheetOptions)}>
+            onclick={async () => await handleClick()}>
         <Download class="size-12"/>
     </button>
+
+    <Modal showModal={showExportModal} title="Export Excel">
+        <div class="flex flex-col gap-4 p-4">
+            {#if exportModalError === ''}
+                <span>Souhaitez vous supprimer les données enregistrées en base ?</span>
+                <div class="w-full flex flex-row gap-4">
+                    <button type="button"
+                            class="btn-danger w-full"
+                            onclick={async () => await onCleanUp()}>
+                        <span>Oui</span>
+                    </button>
+                    <button type="button"
+                            class="btn-primary w-full"
+                            onclick={() => showExportModal = false}>
+                        <span>Non</span>
+                    </button>
+                </div>
+            {:else}
+                <div class="flex flex-col gap-2">
+                    <span>Une erreur est survenue pendant l'opération:</span>
+                    <span class="text-red-500 font-semibold">{exportModalError}</span>
+                </div>
+                <button type="button"
+                        class="btn-primary"
+                        onclick={() => goto('/')}>
+                    <span class="text-white font-bold">Retour</span>
+                </button>
+            {/if}
+        </div>
+    </Modal>
 </Header>

@@ -3,6 +3,7 @@
     import Header from "$lib/components/ui/Header.svelte";
     import {type ImportResult, importXlsData} from "$lib/utils/xls.utils.js";
     import {goto} from "$app/navigation";
+    import {setLoading} from "$lib/stores/loader.store.js";
 
     let showModal = $state(false);
     let result: ImportResult = $state({
@@ -17,6 +18,7 @@
     }
 
     async function handleImport(event: Event) {
+        setLoading(true);
         result = await importXlsData(event);
 
         console.log(
@@ -30,6 +32,7 @@
                 error.rowIndex ? 'numéro de ligne: ' + error.rowIndex : ""
             );
         }
+        setLoading(false);
         showModal = true;
     }
 </script>
