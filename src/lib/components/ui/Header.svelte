@@ -4,10 +4,8 @@
     import {goto} from "$app/navigation";
     import {onMount} from "svelte";
     import Selector from "$lib/components/ux/Selector.svelte";
-    import Loader from "$lib/components/ui/Loader.svelte";
 
     type Props = {
-        loading?: boolean;
         buttons?: {
             createCustomer?: boolean;
             sheetSelector?: {
@@ -18,7 +16,7 @@
         children?: any,
     };
 
-    const {loading = $bindable(false), buttons = $bindable({
+    const {buttons = $bindable({
         createCustomer: false,
         sheetSelector: {
             sheetOptions: [],
@@ -79,8 +77,5 @@
 </header>
 
 <main style="padding-top: calc(env(safe-area-inset-top) + var(--header-h));">
-    <Loader active={loading}/>
-    {#if loading === false}
-        {@render children?.()}
-    {/if}
+    {@render children?.()}
 </main>

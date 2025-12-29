@@ -12,8 +12,7 @@
     .loader-overlay {
         position: fixed;
         inset: 0;
-        background: rgba(0, 0, 0, 0.15);
-        backdrop-filter: blur(1px);
+        background: radial-gradient(circle at center, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.25) 30%, rgba(0, 0, 0, 0.15) 60%, rgba(0, 0, 0, 0.05) 80%, transparent 100%);
         display: flex;
         justify-content: center;
         align-items: center;

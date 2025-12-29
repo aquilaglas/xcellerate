@@ -4,7 +4,6 @@
     import {type ImportResult, importXlsData} from "$lib/utils/xls.utils.js";
     import {goto} from "$app/navigation";
 
-    let loading = $state(false);
     let showModal = $state(false);
     let result: ImportResult = $state({
         createdSheets: 0,
@@ -18,7 +17,6 @@
     }
 
     async function handleImport(event: Event) {
-        loading = true;
         result = await importXlsData(event);
 
         console.log(
@@ -32,7 +30,6 @@
                 error.rowIndex ? 'numéro de ligne: ' + error.rowIndex : ""
             );
         }
-        loading = false;
         showModal = true;
     }
 </script>
@@ -44,7 +41,7 @@
         class="hidden"
         onchange={handleImport}
 />
-<Header bind:loading>
+<Header>
     <div class="w-full flex justify-center bg-green-700 pt-[40vh] overscroll-none">
         <button type="button" class="clickable-card font-bold -translate-y-[28px]"
                 onclick={() => document.getElementById('fileInput')?.click()}>

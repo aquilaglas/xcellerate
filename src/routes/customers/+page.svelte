@@ -7,6 +7,8 @@
     import {filterAndSortCustomers} from "$lib/utils/filter-sort.utils.js";
     import CustomerFilters from "$lib/components/ux/CustomerFilters.svelte";
     import SortButtons from "$lib/components/ux/SortButtons.svelte";
+    import {Download} from "lucide-svelte";
+    import {exportXlsData} from "$lib/utils/xls.utils.js";
 
     const {data}: PageProps = $props();
 
@@ -82,9 +84,8 @@
         </div>
     {/if}
 
-    <!-- EXPORT DU FICHIER -->
-    <!--<button class="btn-primary fixed bottom-0 right-0 h-fit z-50 m-2"
-            onclick={() => exportXlsData(data.filteredAndSortedCustomers)}>
+    <button class="btn-primary fixed bottom-0 right-0 h-fit z-50 m-2"
+            onclick={async () => await exportXlsData(data.sheetOptions)}>
         <Download class="size-12"/>
-    </button>-->
+    </button>
 </Header>
